@@ -91,38 +91,3 @@ pub struct OrderHistory {
     pub quote_amount_returned: u64,
     pub base_amount_returned: u64,
 }
-
-
-#[derive(Clone)]
-pub struct MarketState(agnostic_orderbook::state::MarketState);
-
-impl MarketState {
-    pub const LEN: usize = agnostic_orderbook::state::MARKET_STATE_LEN;
-}
-
-impl anchor_lang::AccountDeserialize for MarketState {
-    fn try_deserialize_unchecked(buf: &mut &[u8]) -> anchor_lang::Result<Self> {
-        let this = try_from_bytes::<agnostic_orderbook::state::MarketState>(buf).unwrap();
-        let market = Self(*this);
-        if market.tag != agnostic_orderbook::state::AccountTag::Market as u64 {
-            return Err(error!(CustomErrors::InvalidAobMarketState));
-        };
-        Ok(market)
-      }
-}
-
-impl anchor_lang::AccountSerialize for MarketState {}
-
-impl anchor_lang::Owner for MarketState {
-    fn owner() -> Pubkey {
-        crate::ID
-    }
-}
-
-impl Deref for MarketState {
-    type Target = agnostic_orderbook::state::MarketState;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}

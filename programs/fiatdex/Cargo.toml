@@ -22,3 +22,4 @@ overflow-checks = true
 anchor-lang = "0.24.2"
 anchor-spl="0.24.2"
 agnostic-orderbook = {git = "https://github.com/Bonfida/agnostic-orderbook.git"}
+bytemuck = {version = "1.7.2", features= ["derive"]}
