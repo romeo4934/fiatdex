@@ -26,6 +26,8 @@ import {
   getCreateAccountParams
 } from "./sdk";
 
+// import * as genInstr from "../generated/instructions";
+
 describe("fiatdex", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
@@ -35,7 +37,7 @@ describe("fiatdex", () => {
   const program = anchor.workspace.Fiatdex as Program<Fiatdex>;
 
 
-  const auctionId = Array.from(Buffer.from("123".padEnd(10))); // Can be up to 10 characters long
+  const marketId = Array.from(Buffer.from("123".padEnd(10))); // Can be up to 10 characters long
   const minBaseOrderSize = new BN(1000);
   const tickSizeNum = 0.1;
   const tickSize = toFp32(tickSizeNum);
@@ -54,11 +56,37 @@ describe("fiatdex", () => {
       program,
       provider,
       wallet,
-      auctionId,
+      marketId,
       minBaseOrderSize,
       tickSize,
     );
     let tx = new anchor.web3.Transaction();
+
+    let eventQueueParams = await getCreateAccountParams(
+      program,
+      provider,
+      wallet,
+      auction.eventQueue,
+      eventQueueBytes
+    );
+    tx.add(anchor.web3.SystemProgram.createAccount(eventQueueParams));
+
+    let bidsParams = await getCreateAccountParams(
+      program,
+      provider,
+      wallet,
+      auction.bids,
+      bidsBytes
+    );
+    tx.add(anchor.web3.SystemProgram.createAccount(bidsParams));
+    let asksParams = await getCreateAccountParams(
+      program,
+      provider,
+      wallet,
+      auction.asks,
+      asksBytes
+    );
+    tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
 
     //const tx = await program.methods.initMarket().rpc();
     // console.log("Your transaction signature", tx);
