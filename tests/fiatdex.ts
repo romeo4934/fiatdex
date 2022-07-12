@@ -27,12 +27,18 @@ import {
 } from "./sdk";
 
 import * as genInstr from "../generated/instructions";
+import * as genTypes from "../generated/types";
+import * as genAccs from "../generated/accounts";
+import { fromCode } from "../generated/errors";
+
+import { assert, expect } from "chai";
 
 describe("fiatdex", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
+  // const provider = anchor.Provider.env();
   const wallet = provider.wallet as anchor.Wallet;
-  anchor.setProvider(provider);
+  anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.Fiatdex as Program<Fiatdex>;
 
@@ -89,6 +95,24 @@ describe("fiatdex", () => {
     tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
 
     // tx.add(genInstr.initMarket({ args: { ...market } }, { ...market }));
+
+    await provider.sendAndConfirm(
+      tx,
+      [market.eventQueueKeypair, market.bidsKeypair, market.asksKeypair],
+      { skipPreflight: true }
+    );
+
+    /*
+    let thisMarket = await genAccs.Auction.fetch(
+      provider.connection,
+      market.auction
+    );
+
+    assert.isTrue(
+      thisMarket.marketId.toString() == marketId.toString(),
+      "auction Ids match"
+    );
+    */
 
     //const tx = await program.methods.initMarket().rpc();
     // console.log("Your transaction signature", tx);
