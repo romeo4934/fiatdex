@@ -10,14 +10,42 @@ export interface InitMarketArgs {
   tickSize: BN
 }
 
+export interface InitMarketAccounts {
+  marketer: PublicKey
+  market: PublicKey
+  eventQueue: PublicKey
+  bids: PublicKey
+  asks: PublicKey
+  quoteMint: PublicKey
+  baseMint: PublicKey
+  quoteVault: PublicKey
+  baseVault: PublicKey
+  rent: PublicKey
+  tokenProgram: PublicKey
+  systemProgram: PublicKey
+}
+
 export const layout = borsh.struct([
   borsh.array(borsh.u8(), 10, "marketId"),
   borsh.u64("minBaseOrderSize"),
   borsh.u64("tickSize"),
 ])
 
-export function initMarket(args: InitMarketArgs) {
-  const keys: Array<AccountMeta> = []
+export function initMarket(args: InitMarketArgs, accounts: InitMarketAccounts) {
+  const keys: Array<AccountMeta> = [
+    { pubkey: accounts.marketer, isSigner: true, isWritable: true },
+    { pubkey: accounts.market, isSigner: false, isWritable: true },
+    { pubkey: accounts.eventQueue, isSigner: false, isWritable: true },
+    { pubkey: accounts.bids, isSigner: false, isWritable: true },
+    { pubkey: accounts.asks, isSigner: false, isWritable: true },
+    { pubkey: accounts.quoteMint, isSigner: false, isWritable: false },
+    { pubkey: accounts.baseMint, isSigner: false, isWritable: false },
+    { pubkey: accounts.quoteVault, isSigner: false, isWritable: true },
+    { pubkey: accounts.baseVault, isSigner: false, isWritable: true },
+    { pubkey: accounts.rent, isSigner: false, isWritable: false },
+    { pubkey: accounts.tokenProgram, isSigner: false, isWritable: false },
+    { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
+  ]
   const identifier = Buffer.from([33, 253, 15, 116, 89, 25, 127, 236])
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
