@@ -25,16 +25,13 @@ export interface Market {
   systemProgram: PublicKey,
   // Args
   auctionId: Array<number>,
-  startOrderPhase: BN,
-  endOrderPhase: BN,
-  endDecryptionPhase: BN,
   minBaseOrderSize: BN,
   tickSize: BN, // FP32
   naclPubkey: Array<number>,
   naclKeypair?: nacl.BoxKeyPair,
 }
 
-export async function initAuctionObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auctionId: Array<number>, minBaseOrderSize: BN, tickSize: BN, orderPhaseLength: number, decryptionPhaseLength: number): Promise<Auction> {
+export async function initAuctionObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auctionId: Array<number>, minBaseOrderSize: BN, tickSize: BN): Promise<Market> {
   let baseMint = await createMint(provider.connection,
     wallet.payer,
     wallet.publicKey,
