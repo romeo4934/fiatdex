@@ -8,29 +8,31 @@ export interface MarketFields {
   bump: number
   bumps: types.AobBumpsFields
   authority: PublicKey
-  startTime: BN
-  endAsks: BN
-  startBids: BN
-  endBids: BN
-  areAsksEncrypted: boolean
-  areBidsEncrypted: boolean
-  finalPriceType: types.FinalPriceTypesKind
+  marketId: Array<number>
+  eventQueue: PublicKey
+  bids: PublicKey
+  asks: PublicKey
   quoteMint: PublicKey
   baseMint: PublicKey
   quoteVault: PublicKey
   baseVault: PublicKey
-  baseTokenLots: BN
-  quoteTokenLots: BN
-  minBaseTokenQuantity: BN
-  currentAskKey: BN
+  minBaseOrderSize: BN
+  tickSize: BN
+  askSearchStackDepth: number
+  bidSearchStackDepth: number
+  askSearchStackValues: Array<number>
+  bidSearchStackValues: Array<number>
   currentBidKey: BN
-  quantityFilledInThisBid: BN
-  quantityFilledInThisAsk: BN
+  currentAskKey: BN
+  currentBidQuantityFilled: BN
+  currentAskQuantityFilled: BN
   totalQuantityFilledSoFar: BN
   hasFoundClearingPrice: boolean
   totalQuantityMatched: BN
-  finalAskPrice: BN
+  remainingAskFills: BN
+  remainingBidFills: BN
   finalBidPrice: BN
+  finalAskPrice: BN
   clearingPrice: BN
 }
 
@@ -38,29 +40,31 @@ export interface MarketJSON {
   bump: number
   bumps: types.AobBumpsJSON
   authority: string
-  startTime: string
-  endAsks: string
-  startBids: string
-  endBids: string
-  areAsksEncrypted: boolean
-  areBidsEncrypted: boolean
-  finalPriceType: types.FinalPriceTypesJSON
+  marketId: Array<number>
+  eventQueue: string
+  bids: string
+  asks: string
   quoteMint: string
   baseMint: string
   quoteVault: string
   baseVault: string
-  baseTokenLots: string
-  quoteTokenLots: string
-  minBaseTokenQuantity: string
-  currentAskKey: string
+  minBaseOrderSize: string
+  tickSize: string
+  askSearchStackDepth: number
+  bidSearchStackDepth: number
+  askSearchStackValues: Array<number>
+  bidSearchStackValues: Array<number>
   currentBidKey: string
-  quantityFilledInThisBid: string
-  quantityFilledInThisAsk: string
+  currentAskKey: string
+  currentBidQuantityFilled: string
+  currentAskQuantityFilled: string
   totalQuantityFilledSoFar: string
   hasFoundClearingPrice: boolean
   totalQuantityMatched: string
-  finalAskPrice: string
+  remainingAskFills: string
+  remainingBidFills: string
   finalBidPrice: string
+  finalAskPrice: string
   clearingPrice: string
 }
 
@@ -68,29 +72,31 @@ export class Market {
   readonly bump: number
   readonly bumps: types.AobBumps
   readonly authority: PublicKey
-  readonly startTime: BN
-  readonly endAsks: BN
-  readonly startBids: BN
-  readonly endBids: BN
-  readonly areAsksEncrypted: boolean
-  readonly areBidsEncrypted: boolean
-  readonly finalPriceType: types.FinalPriceTypesKind
+  readonly marketId: Array<number>
+  readonly eventQueue: PublicKey
+  readonly bids: PublicKey
+  readonly asks: PublicKey
   readonly quoteMint: PublicKey
   readonly baseMint: PublicKey
   readonly quoteVault: PublicKey
   readonly baseVault: PublicKey
-  readonly baseTokenLots: BN
-  readonly quoteTokenLots: BN
-  readonly minBaseTokenQuantity: BN
-  readonly currentAskKey: BN
+  readonly minBaseOrderSize: BN
+  readonly tickSize: BN
+  readonly askSearchStackDepth: number
+  readonly bidSearchStackDepth: number
+  readonly askSearchStackValues: Array<number>
+  readonly bidSearchStackValues: Array<number>
   readonly currentBidKey: BN
-  readonly quantityFilledInThisBid: BN
-  readonly quantityFilledInThisAsk: BN
+  readonly currentAskKey: BN
+  readonly currentBidQuantityFilled: BN
+  readonly currentAskQuantityFilled: BN
   readonly totalQuantityFilledSoFar: BN
   readonly hasFoundClearingPrice: boolean
   readonly totalQuantityMatched: BN
-  readonly finalAskPrice: BN
+  readonly remainingAskFills: BN
+  readonly remainingBidFills: BN
   readonly finalBidPrice: BN
+  readonly finalAskPrice: BN
   readonly clearingPrice: BN
 
   static readonly discriminator = Buffer.from([
@@ -101,29 +107,31 @@ export class Market {
     borsh.u8("bump"),
     types.AobBumps.layout("bumps"),
     borsh.publicKey("authority"),
-    borsh.i64("startTime"),
-    borsh.i64("endAsks"),
-    borsh.i64("startBids"),
-    borsh.i64("endBids"),
-    borsh.bool("areAsksEncrypted"),
-    borsh.bool("areBidsEncrypted"),
-    types.FinalPriceTypes.layout("finalPriceType"),
+    borsh.array(borsh.u8(), 10, "marketId"),
+    borsh.publicKey("eventQueue"),
+    borsh.publicKey("bids"),
+    borsh.publicKey("asks"),
     borsh.publicKey("quoteMint"),
     borsh.publicKey("baseMint"),
     borsh.publicKey("quoteVault"),
     borsh.publicKey("baseVault"),
-    borsh.u64("baseTokenLots"),
-    borsh.u64("quoteTokenLots"),
-    borsh.u64("minBaseTokenQuantity"),
-    borsh.u128("currentAskKey"),
+    borsh.u64("minBaseOrderSize"),
+    borsh.u64("tickSize"),
+    borsh.u8("askSearchStackDepth"),
+    borsh.u8("bidSearchStackDepth"),
+    borsh.array(borsh.u32(), 32, "askSearchStackValues"),
+    borsh.array(borsh.u32(), 32, "bidSearchStackValues"),
     borsh.u128("currentBidKey"),
-    borsh.u64("quantityFilledInThisBid"),
-    borsh.u64("quantityFilledInThisAsk"),
+    borsh.u128("currentAskKey"),
+    borsh.u64("currentBidQuantityFilled"),
+    borsh.u64("currentAskQuantityFilled"),
     borsh.u64("totalQuantityFilledSoFar"),
     borsh.bool("hasFoundClearingPrice"),
     borsh.u64("totalQuantityMatched"),
-    borsh.u64("finalAskPrice"),
+    borsh.u64("remainingAskFills"),
+    borsh.u64("remainingBidFills"),
     borsh.u64("finalBidPrice"),
+    borsh.u64("finalAskPrice"),
     borsh.u64("clearingPrice"),
   ])
 
@@ -131,29 +139,31 @@ export class Market {
     this.bump = fields.bump
     this.bumps = new types.AobBumps({ ...fields.bumps })
     this.authority = fields.authority
-    this.startTime = fields.startTime
-    this.endAsks = fields.endAsks
-    this.startBids = fields.startBids
-    this.endBids = fields.endBids
-    this.areAsksEncrypted = fields.areAsksEncrypted
-    this.areBidsEncrypted = fields.areBidsEncrypted
-    this.finalPriceType = fields.finalPriceType
+    this.marketId = fields.marketId
+    this.eventQueue = fields.eventQueue
+    this.bids = fields.bids
+    this.asks = fields.asks
     this.quoteMint = fields.quoteMint
     this.baseMint = fields.baseMint
     this.quoteVault = fields.quoteVault
     this.baseVault = fields.baseVault
-    this.baseTokenLots = fields.baseTokenLots
-    this.quoteTokenLots = fields.quoteTokenLots
-    this.minBaseTokenQuantity = fields.minBaseTokenQuantity
-    this.currentAskKey = fields.currentAskKey
+    this.minBaseOrderSize = fields.minBaseOrderSize
+    this.tickSize = fields.tickSize
+    this.askSearchStackDepth = fields.askSearchStackDepth
+    this.bidSearchStackDepth = fields.bidSearchStackDepth
+    this.askSearchStackValues = fields.askSearchStackValues
+    this.bidSearchStackValues = fields.bidSearchStackValues
     this.currentBidKey = fields.currentBidKey
-    this.quantityFilledInThisBid = fields.quantityFilledInThisBid
-    this.quantityFilledInThisAsk = fields.quantityFilledInThisAsk
+    this.currentAskKey = fields.currentAskKey
+    this.currentBidQuantityFilled = fields.currentBidQuantityFilled
+    this.currentAskQuantityFilled = fields.currentAskQuantityFilled
     this.totalQuantityFilledSoFar = fields.totalQuantityFilledSoFar
     this.hasFoundClearingPrice = fields.hasFoundClearingPrice
     this.totalQuantityMatched = fields.totalQuantityMatched
-    this.finalAskPrice = fields.finalAskPrice
+    this.remainingAskFills = fields.remainingAskFills
+    this.remainingBidFills = fields.remainingBidFills
     this.finalBidPrice = fields.finalBidPrice
+    this.finalAskPrice = fields.finalAskPrice
     this.clearingPrice = fields.clearingPrice
   }
 
@@ -202,29 +212,31 @@ export class Market {
       bump: dec.bump,
       bumps: types.AobBumps.fromDecoded(dec.bumps),
       authority: dec.authority,
-      startTime: dec.startTime,
-      endAsks: dec.endAsks,
-      startBids: dec.startBids,
-      endBids: dec.endBids,
-      areAsksEncrypted: dec.areAsksEncrypted,
-      areBidsEncrypted: dec.areBidsEncrypted,
-      finalPriceType: types.FinalPriceTypes.fromDecoded(dec.finalPriceType),
+      marketId: dec.marketId,
+      eventQueue: dec.eventQueue,
+      bids: dec.bids,
+      asks: dec.asks,
       quoteMint: dec.quoteMint,
       baseMint: dec.baseMint,
       quoteVault: dec.quoteVault,
       baseVault: dec.baseVault,
-      baseTokenLots: dec.baseTokenLots,
-      quoteTokenLots: dec.quoteTokenLots,
-      minBaseTokenQuantity: dec.minBaseTokenQuantity,
-      currentAskKey: dec.currentAskKey,
+      minBaseOrderSize: dec.minBaseOrderSize,
+      tickSize: dec.tickSize,
+      askSearchStackDepth: dec.askSearchStackDepth,
+      bidSearchStackDepth: dec.bidSearchStackDepth,
+      askSearchStackValues: dec.askSearchStackValues,
+      bidSearchStackValues: dec.bidSearchStackValues,
       currentBidKey: dec.currentBidKey,
-      quantityFilledInThisBid: dec.quantityFilledInThisBid,
-      quantityFilledInThisAsk: dec.quantityFilledInThisAsk,
+      currentAskKey: dec.currentAskKey,
+      currentBidQuantityFilled: dec.currentBidQuantityFilled,
+      currentAskQuantityFilled: dec.currentAskQuantityFilled,
       totalQuantityFilledSoFar: dec.totalQuantityFilledSoFar,
       hasFoundClearingPrice: dec.hasFoundClearingPrice,
       totalQuantityMatched: dec.totalQuantityMatched,
-      finalAskPrice: dec.finalAskPrice,
+      remainingAskFills: dec.remainingAskFills,
+      remainingBidFills: dec.remainingBidFills,
       finalBidPrice: dec.finalBidPrice,
+      finalAskPrice: dec.finalAskPrice,
       clearingPrice: dec.clearingPrice,
     })
   }
@@ -234,29 +246,31 @@ export class Market {
       bump: this.bump,
       bumps: this.bumps.toJSON(),
       authority: this.authority.toString(),
-      startTime: this.startTime.toString(),
-      endAsks: this.endAsks.toString(),
-      startBids: this.startBids.toString(),
-      endBids: this.endBids.toString(),
-      areAsksEncrypted: this.areAsksEncrypted,
-      areBidsEncrypted: this.areBidsEncrypted,
-      finalPriceType: this.finalPriceType.toJSON(),
+      marketId: this.marketId,
+      eventQueue: this.eventQueue.toString(),
+      bids: this.bids.toString(),
+      asks: this.asks.toString(),
       quoteMint: this.quoteMint.toString(),
       baseMint: this.baseMint.toString(),
       quoteVault: this.quoteVault.toString(),
       baseVault: this.baseVault.toString(),
-      baseTokenLots: this.baseTokenLots.toString(),
-      quoteTokenLots: this.quoteTokenLots.toString(),
-      minBaseTokenQuantity: this.minBaseTokenQuantity.toString(),
-      currentAskKey: this.currentAskKey.toString(),
+      minBaseOrderSize: this.minBaseOrderSize.toString(),
+      tickSize: this.tickSize.toString(),
+      askSearchStackDepth: this.askSearchStackDepth,
+      bidSearchStackDepth: this.bidSearchStackDepth,
+      askSearchStackValues: this.askSearchStackValues,
+      bidSearchStackValues: this.bidSearchStackValues,
       currentBidKey: this.currentBidKey.toString(),
-      quantityFilledInThisBid: this.quantityFilledInThisBid.toString(),
-      quantityFilledInThisAsk: this.quantityFilledInThisAsk.toString(),
+      currentAskKey: this.currentAskKey.toString(),
+      currentBidQuantityFilled: this.currentBidQuantityFilled.toString(),
+      currentAskQuantityFilled: this.currentAskQuantityFilled.toString(),
       totalQuantityFilledSoFar: this.totalQuantityFilledSoFar.toString(),
       hasFoundClearingPrice: this.hasFoundClearingPrice,
       totalQuantityMatched: this.totalQuantityMatched.toString(),
-      finalAskPrice: this.finalAskPrice.toString(),
+      remainingAskFills: this.remainingAskFills.toString(),
+      remainingBidFills: this.remainingBidFills.toString(),
       finalBidPrice: this.finalBidPrice.toString(),
+      finalAskPrice: this.finalAskPrice.toString(),
       clearingPrice: this.clearingPrice.toString(),
     }
   }
@@ -266,29 +280,31 @@ export class Market {
       bump: obj.bump,
       bumps: types.AobBumps.fromJSON(obj.bumps),
       authority: new PublicKey(obj.authority),
-      startTime: new BN(obj.startTime),
-      endAsks: new BN(obj.endAsks),
-      startBids: new BN(obj.startBids),
-      endBids: new BN(obj.endBids),
-      areAsksEncrypted: obj.areAsksEncrypted,
-      areBidsEncrypted: obj.areBidsEncrypted,
-      finalPriceType: types.FinalPriceTypes.fromJSON(obj.finalPriceType),
+      marketId: obj.marketId,
+      eventQueue: new PublicKey(obj.eventQueue),
+      bids: new PublicKey(obj.bids),
+      asks: new PublicKey(obj.asks),
       quoteMint: new PublicKey(obj.quoteMint),
       baseMint: new PublicKey(obj.baseMint),
       quoteVault: new PublicKey(obj.quoteVault),
       baseVault: new PublicKey(obj.baseVault),
-      baseTokenLots: new BN(obj.baseTokenLots),
-      quoteTokenLots: new BN(obj.quoteTokenLots),
-      minBaseTokenQuantity: new BN(obj.minBaseTokenQuantity),
-      currentAskKey: new BN(obj.currentAskKey),
+      minBaseOrderSize: new BN(obj.minBaseOrderSize),
+      tickSize: new BN(obj.tickSize),
+      askSearchStackDepth: obj.askSearchStackDepth,
+      bidSearchStackDepth: obj.bidSearchStackDepth,
+      askSearchStackValues: obj.askSearchStackValues,
+      bidSearchStackValues: obj.bidSearchStackValues,
       currentBidKey: new BN(obj.currentBidKey),
-      quantityFilledInThisBid: new BN(obj.quantityFilledInThisBid),
-      quantityFilledInThisAsk: new BN(obj.quantityFilledInThisAsk),
+      currentAskKey: new BN(obj.currentAskKey),
+      currentBidQuantityFilled: new BN(obj.currentBidQuantityFilled),
+      currentAskQuantityFilled: new BN(obj.currentAskQuantityFilled),
       totalQuantityFilledSoFar: new BN(obj.totalQuantityFilledSoFar),
       hasFoundClearingPrice: obj.hasFoundClearingPrice,
       totalQuantityMatched: new BN(obj.totalQuantityMatched),
-      finalAskPrice: new BN(obj.finalAskPrice),
+      remainingAskFills: new BN(obj.remainingAskFills),
+      remainingBidFills: new BN(obj.remainingBidFills),
       finalBidPrice: new BN(obj.finalBidPrice),
+      finalAskPrice: new BN(obj.finalAskPrice),
       clearingPrice: new BN(obj.clearingPrice),
     })
   }
