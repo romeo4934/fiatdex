@@ -7,8 +7,8 @@ import * as genAccs from "../../generated/accounts";
 
 export interface Market {
   // Accounts
-  auctioneer: PublicKey,
-  auction: PublicKey,
+  marketer: PublicKey,
+  market: PublicKey,
   eventQueue: PublicKey,
   eventQueueKeypair?: Keypair,
   bids: PublicKey,
@@ -23,12 +23,12 @@ export interface Market {
   tokenProgram: PublicKey,
   systemProgram: PublicKey,
   // Args
-  auctionId: Array<number>,
+  marketId: Array<number>,
   minBaseOrderSize: BN,
   tickSize: BN, // FP32
 }
 
-export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auctionId: Array<number>, minBaseOrderSize: BN, tickSize: BN): Promise<Market> {
+export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, marketId: Array<number>, minBaseOrderSize: BN, tickSize: BN): Promise<Market> {
   let baseMint = await createMint(provider.connection,
     wallet.payer,
     wallet.publicKey,
@@ -44,19 +44,19 @@ export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: 
   let tx = new anchor.web3.Transaction();
   let nowBn = new anchor.BN(Date.now() / 1000);
   // let auctionIdArray = Array.from(auctionId);
-  let [auction] = await anchor.web3.PublicKey.findProgramAddress(
+  let [market] = await anchor.web3.PublicKey.findProgramAddress(
     // TODO toBuffer might not be LE (lower endian) by default
-    [Buffer.from("auction"), Buffer.from(auctionId), wallet.publicKey.toBuffer()],
+    [Buffer.from("market"), Buffer.from(marketId), wallet.publicKey.toBuffer()],
     program.programId
   )
   let [quoteVault] = await anchor.web3.PublicKey.findProgramAddress(
     // TODO toBuffer might not be LE (lower endian) by default
-    [Buffer.from("quote_vault"), Buffer.from(auctionId), wallet.publicKey.toBuffer()],
+    [Buffer.from("quote_vault"), Buffer.from(marketId), wallet.publicKey.toBuffer()],
     program.programId
   )
   let [baseVault] = await anchor.web3.PublicKey.findProgramAddress(
     // TODO toBuffer might not be LE (lower endian) by default
-    [Buffer.from("base_vault"), Buffer.from(auctionId), wallet.publicKey.toBuffer()],
+    [Buffer.from("base_vault"), Buffer.from(marketId), wallet.publicKey.toBuffer()],
     program.programId
   )
   let eventQueueKeypair = new anchor.web3.Keypair();
@@ -66,8 +66,8 @@ export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: 
   let asksKeypair = new anchor.web3.Keypair();
   let asks = asksKeypair.publicKey;
   return {
-    auctioneer: wallet.publicKey,
-    auction,
+    marketer: wallet.publicKey,
+    market,
     eventQueue,
     eventQueueKeypair,
     bids,
@@ -82,7 +82,7 @@ export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: 
     tokenProgram: TOKEN_PROGRAM_ID,
     systemProgram: anchor.web3.SystemProgram.programId,
     // Args
-    auctionId,
+    marketId,
     minBaseOrderSize,
     tickSize,
   }
