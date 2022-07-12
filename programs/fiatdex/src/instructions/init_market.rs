@@ -8,7 +8,7 @@ use crate::program_accounts::*;
 
 
 #[derive(Accounts)]
-pub struct NewMarket<'info> {
+pub struct InitMarket<'info> {
     pub user: Signer<'info>,
 
     pub base_vault: Account<'info, TokenAccount>,

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use agnostic_orderbook::state::Side;
+use agnostic_orderbook::state::{Side,SelfTradeBehavior};
 
 use instructions::*;
 use program_accounts::*;
@@ -17,9 +17,21 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod fiatdex {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn init_market(_ctx: Context<InitMarket>) -> Result<()> {
+
         let this = Side::Ask;
-        /*
+        match this {
+            Side::Bid => {
+                msg!("hey it's a bid");
+            }
+            Side::Ask => {
+                msg!("hey it's an ask");
+            }
+        }
+        Ok(())
+    }
+
+    pub fn new_maker_order(_ctx: Context<InitMarket>) -> Result<()> {
         let alice = [1; 32];
         let invoke_params = agnostic_orderbook::instruction::new_order::Params {
             max_base_qty: 50_000,
@@ -32,34 +44,13 @@ pub mod fiatdex {
             post_allowed: true,
             self_trade_behavior: SelfTradeBehavior::AbortTransaction,
         };
-        */
-        
-        match this {
-            Side::Bid => {
-                msg!("hey it's a bid");
-            }
-            Side::Ask => {
-                msg!("hey it's an ask");
-            }
-        }
-        Ok(())
-    }
 
-    pub fn init_market(_ctx: Context<Initialize>) -> Result<()> {
         Err(error!(CustomErrors::NotImplemented))
         // Ok(())
     }
 
-    pub fn new_maker_order(_ctx: Context<Initialize>) -> Result<()> {
-        Err(error!(CustomErrors::NotImplemented))
-        // Ok(())
-    }
-
-    pub fn new_taker_order(_ctx: Context<Initialize>) -> Result<()> {
+    pub fn new_taker_order(_ctx: Context<InitMarket>) -> Result<()> {
         Err(error!(CustomErrors::NotImplemented))
         // Ok(())
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
