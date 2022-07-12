@@ -26,7 +26,7 @@ import {
   getCreateAccountParams
 } from "./sdk";
 
-// import * as genInstr from "../generated/instructions";
+import * as genInstr from "../generated/instructions";
 
 describe("fiatdex", () => {
   // Configure the client to use the local cluster.
@@ -46,13 +46,13 @@ describe("fiatdex", () => {
   const asksBytes = 64000;
   const maxOrders = new BN(2);
 
-  let auction: Market;
+  let market: Market;
   let users: Array<User> = [];
 
 
   it("inits the market", async () => {
 
-    auction = await initMarketObj(
+    market = await initMarketObj(
       program,
       provider,
       wallet,
@@ -66,7 +66,7 @@ describe("fiatdex", () => {
       program,
       provider,
       wallet,
-      auction.eventQueue,
+      market.eventQueue,
       eventQueueBytes
     );
     tx.add(anchor.web3.SystemProgram.createAccount(eventQueueParams));
@@ -75,7 +75,7 @@ describe("fiatdex", () => {
       program,
       provider,
       wallet,
-      auction.bids,
+      market.bids,
       bidsBytes
     );
     tx.add(anchor.web3.SystemProgram.createAccount(bidsParams));
@@ -83,10 +83,12 @@ describe("fiatdex", () => {
       program,
       provider,
       wallet,
-      auction.asks,
+      market.asks,
       asksBytes
     );
     tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
+
+    // tx.add(genInstr.initMarket({ args: { ...market } }, { ...market }));
 
     //const tx = await program.methods.initMarket().rpc();
     // console.log("Your transaction signature", tx);
