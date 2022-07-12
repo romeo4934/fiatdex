@@ -21,17 +21,16 @@ import {
 import {
   Market,
   User,
-  initAuctionObj,
+  initMarketObj,
   toFp32,
   getCreateAccountParams
 } from "./sdk";
 
 describe("fiatdex", () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.Provider.env();
+  const provider = anchor.AnchorProvider.env();
   const wallet = provider.wallet as anchor.Wallet;
   anchor.setProvider(provider);
-  anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.Fiatdex as Program<Fiatdex>;
 
@@ -51,7 +50,7 @@ describe("fiatdex", () => {
 
   it("inits the market", async () => {
 
-    auction = await initAuctionObj(
+    auction = await initMarketObj(
       program,
       provider,
       wallet,

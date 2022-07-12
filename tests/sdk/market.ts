@@ -2,7 +2,6 @@ import * as anchor from "@project-serum/anchor";
 import { BN } from "@project-serum/anchor";
 import { PublicKey, Keypair, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { createAssociatedTokenAccount, createMint, createMintToCheckedInstruction, getAccount, getMint, mintTo, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import nacl from "tweetnacl";
 import { Fiatdex } from "../../target/types/fiatdex";
 // import * as genAccs from "../../generated/accounts";
 
@@ -27,11 +26,9 @@ export interface Market {
   auctionId: Array<number>,
   minBaseOrderSize: BN,
   tickSize: BN, // FP32
-  naclPubkey: Array<number>,
-  naclKeypair?: nacl.BoxKeyPair,
 }
 
-export async function initAuctionObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auctionId: Array<number>, minBaseOrderSize: BN, tickSize: BN): Promise<Market> {
+export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auctionId: Array<number>, minBaseOrderSize: BN, tickSize: BN): Promise<Market> {
   let baseMint = await createMint(provider.connection,
     wallet.payer,
     wallet.publicKey,
@@ -68,8 +65,6 @@ export async function initAuctionObj(program: anchor.Program<Fiatdex>, provider:
   let bids = bidsKeypair.publicKey;
   let asksKeypair = new anchor.web3.Keypair();
   let asks = asksKeypair.publicKey;
-  let naclKeypair = nacl.box.keyPair();
-  let naclPubkey = Array.from(naclKeypair.publicKey);
   return {
     auctioneer: wallet.publicKey,
     auction,
@@ -88,15 +83,8 @@ export async function initAuctionObj(program: anchor.Program<Fiatdex>, provider:
     systemProgram: anchor.web3.SystemProgram.programId,
     // Args
     auctionId,
-    startOrderPhase: nowBn,
-    endOrderPhase: nowBn.add(new anchor.BN(orderPhaseLength)),
-    endDecryptionPhase: nowBn.add(new anchor.BN(orderPhaseLength + decryptionPhaseLength)),
-    areAsksEncrypted,
-    areBidsEncrypted,
     minBaseOrderSize,
     tickSize,
-    naclKeypair,
-    naclPubkey,
   }
 }
 
