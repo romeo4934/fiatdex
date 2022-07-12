@@ -17,18 +17,8 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod fiatdex {
     use super::*;
 
-    pub fn init_market(_ctx: Context<InitMarket>) -> Result<()> {
-
-        let this = Side::Ask;
-        match this {
-            Side::Bid => {
-                msg!("hey it's a bid");
-            }
-            Side::Ask => {
-                msg!("hey it's an ask");
-            }
-        }
-        Ok(())
+    pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order_size: u64, tick_size: u64) -> Result<()> {
+        instructions::init_market(ctx, market_id, min_base_order_size, tick_size)
     }
 
     pub fn new_maker_order(_ctx: Context<InitMarket>) -> Result<()> {
