@@ -3,6 +3,7 @@ use anchor_lang::prelude::*;
 use agnostic_orderbook::state::{Side,SelfTradeBehavior};
 
 use instructions::*;
+use types::*;
 use program_accounts::*;
 use error::*;
 
@@ -10,6 +11,7 @@ mod consts;
 mod error;
 pub mod program_accounts;
 pub mod instructions;
+pub mod types;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
