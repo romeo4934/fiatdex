@@ -110,6 +110,20 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         bid_search_stack_values: [0; 32],
     });
 
+    // Init event queue
+    let event_queue_header = EventQueueHeader::initialize(CALLBACK_INFO_LEN);
+    event_queue_header
+        .serialize(&mut (&mut ctx.accounts.event_queue.data.borrow_mut() as &mut [u8]))
+        .unwrap();
+
+    // Init orderbook
+    Slab::initialize(
+        &ctx.accounts.bids,
+        &ctx.accounts.asks,
+        ctx.accounts.market.key(),
+        CALLBACK_INFO_LEN,
+    );
+
     let this = Side::Ask;
     match this {
         Side::Bid => {

@@ -103,17 +103,17 @@ describe("fiatdex", () => {
     );
 
 
-    /*
-    let thisMarket = await genAccs.Auction.fetch(
+
+    let thisMarket = await genAccs.Market.fetch(
       provider.connection,
-      market.auction
+      market.market
     );
 
     assert.isTrue(
       thisMarket.marketId.toString() == marketId.toString(),
-      "auction Ids match"
+      "market Ids match"
     );
-    */
+
 
     //const tx = await program.methods.initMarket().rpc();
     // console.log("Your transaction signature", tx);
