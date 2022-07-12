@@ -3,7 +3,7 @@ import { BN } from "@project-serum/anchor";
 import { PublicKey, Keypair, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { createAssociatedTokenAccount, createMint, createMintToCheckedInstruction, getAccount, getMint, mintTo, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Fiatdex } from "../../target/types/fiatdex";
-// import * as genAccs from "../../generated/accounts";
+import * as genAccs from "../../generated/accounts";
 
 export interface Market {
   // Accounts

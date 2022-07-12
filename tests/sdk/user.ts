@@ -4,8 +4,8 @@ import { PublicKey, Keypair, Connection, LAMPORTS_PER_SOL } from "@solana/web3.j
 import { createAssociatedTokenAccount, mintTo, getAssociatedTokenAddress } from "@solana/spl-token";
 import nacl from "tweetnacl";
 import { Fiatdex } from "../../target/types/fiatdex";
-// import * as genTypes from "../../generated/types";
-// import * as genAccs from "../../generated/accounts";
+import * as genTypes from "../../generated/types";
+import * as genAccs from "../../generated/accounts";
 import { Market } from "./market";
 import { SSL_OP_NETSCAPE_CA_DN_BUG } from "constants";
 
