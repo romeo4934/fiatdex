@@ -94,7 +94,7 @@ describe("fiatdex", () => {
     );
     tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
 
-    tx.add(genInstr.initMarket({ ...market }));
+    tx.add(genInstr.initMarket({ ...market }, { ...market }));
 
     await provider.sendAndConfirm(
       tx,
