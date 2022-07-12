@@ -10,7 +10,7 @@ use crate::error::CustomErrors;
 
 #[account]
 // #[derive(Default)] TODO there's an error with having a default enum value
-pub struct Auction {
+pub struct Market {
     // General auction options
     pub bump: u8,
     pub bumps: AobBumps,
