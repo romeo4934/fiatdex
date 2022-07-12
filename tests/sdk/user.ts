@@ -6,7 +6,7 @@ import nacl from "tweetnacl";
 import { Fiatdex } from "../../target/types/fiatdex";
 // import * as genTypes from "../../generated/types";
 // import * as genAccs from "../../generated/accounts";
-import { Auction } from "./auction";
+import { Market } from "./market";
 import { SSL_OP_NETSCAPE_CA_DN_BUG } from "constants";
 
 
