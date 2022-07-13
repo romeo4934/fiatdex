@@ -14,6 +14,7 @@ export interface InitMarketAccounts {
   marketer: PublicKey
   market: PublicKey
   eventQueue: PublicKey
+  orderbook: PublicKey
   bids: PublicKey
   asks: PublicKey
   quoteMint: PublicKey
@@ -36,6 +37,7 @@ export function initMarket(args: InitMarketArgs, accounts: InitMarketAccounts) {
     { pubkey: accounts.marketer, isSigner: true, isWritable: true },
     { pubkey: accounts.market, isSigner: false, isWritable: true },
     { pubkey: accounts.eventQueue, isSigner: false, isWritable: true },
+    { pubkey: accounts.orderbook, isSigner: false, isWritable: true },
     { pubkey: accounts.bids, isSigner: false, isWritable: true },
     { pubkey: accounts.asks, isSigner: false, isWritable: true },
     { pubkey: accounts.quoteMint, isSigner: false, isWritable: false },

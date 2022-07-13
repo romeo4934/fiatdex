@@ -39,6 +39,9 @@ pub struct InitMarket<'info> {
     pub event_queue: UncheckedAccount<'info>,
     /// CHECK: This is zeroed and owned by the program
     #[account(zero, owner = crate::ID)]
+    pub orderbook: UncheckedAccount<'info>,
+    /// CHECK: This is zeroed and owned by the program
+    #[account(zero, owner = crate::ID)]
     pub bids: UncheckedAccount<'info>,
     /// CHECK: This is zeroed and owned by the program
     #[account(zero, owner = crate::ID)]
@@ -83,6 +86,7 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         market_id: market_id,
         // Order book stuff
         event_queue: ctx.accounts.event_queue.key(),
+        orderbook: ctx.accounts.orderbook.key(),
         bids: ctx.accounts.bids.key(),
         asks: ctx.accounts.asks.key(),
         quote_mint: ctx.accounts.quote_mint.key(),

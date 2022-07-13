@@ -50,6 +50,7 @@ describe("fiatdex", () => {
   const eventQueueBytes = 104032;
   const bidsBytes = 64000;
   const asksBytes = 64000;
+  const orderbookBytes = 64000;
   const maxOrders = new BN(2);
 
   let market: Market;
@@ -94,11 +95,20 @@ describe("fiatdex", () => {
     );
     tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
 
+    let orderbookParams = await getCreateAccountParams(
+      program,
+      provider,
+      wallet,
+      market.orderbook,
+      orderbookBytes
+    );
+    tx.add(anchor.web3.SystemProgram.createAccount(orderbookParams));
+
     tx.add(genInstr.initMarket({ ...market }, { ...market }));
     console.log("TEST");
     await provider.sendAndConfirm(
       tx,
-      [market.eventQueueKeypair, market.bidsKeypair, market.asksKeypair],
+      [market.eventQueueKeypair, market.bidsKeypair, market.asksKeypair, market.orderbookKeypair],
       { skipPreflight: true }
     );
 

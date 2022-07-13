@@ -9,6 +9,7 @@ export interface MarketFields {
   bumps: types.AobBumpsFields
   authority: PublicKey
   marketId: Array<number>
+  orderbook: PublicKey
   eventQueue: PublicKey
   bids: PublicKey
   asks: PublicKey
@@ -41,6 +42,7 @@ export interface MarketJSON {
   bumps: types.AobBumpsJSON
   authority: string
   marketId: Array<number>
+  orderbook: string
   eventQueue: string
   bids: string
   asks: string
@@ -73,6 +75,7 @@ export class Market {
   readonly bumps: types.AobBumps
   readonly authority: PublicKey
   readonly marketId: Array<number>
+  readonly orderbook: PublicKey
   readonly eventQueue: PublicKey
   readonly bids: PublicKey
   readonly asks: PublicKey
@@ -108,6 +111,7 @@ export class Market {
     types.AobBumps.layout("bumps"),
     borsh.publicKey("authority"),
     borsh.array(borsh.u8(), 10, "marketId"),
+    borsh.publicKey("orderbook"),
     borsh.publicKey("eventQueue"),
     borsh.publicKey("bids"),
     borsh.publicKey("asks"),
@@ -140,6 +144,7 @@ export class Market {
     this.bumps = new types.AobBumps({ ...fields.bumps })
     this.authority = fields.authority
     this.marketId = fields.marketId
+    this.orderbook = fields.orderbook
     this.eventQueue = fields.eventQueue
     this.bids = fields.bids
     this.asks = fields.asks
@@ -213,6 +218,7 @@ export class Market {
       bumps: types.AobBumps.fromDecoded(dec.bumps),
       authority: dec.authority,
       marketId: dec.marketId,
+      orderbook: dec.orderbook,
       eventQueue: dec.eventQueue,
       bids: dec.bids,
       asks: dec.asks,
@@ -247,6 +253,7 @@ export class Market {
       bumps: this.bumps.toJSON(),
       authority: this.authority.toString(),
       marketId: this.marketId,
+      orderbook: this.orderbook.toString(),
       eventQueue: this.eventQueue.toString(),
       bids: this.bids.toString(),
       asks: this.asks.toString(),
@@ -281,6 +288,7 @@ export class Market {
       bumps: types.AobBumps.fromJSON(obj.bumps),
       authority: new PublicKey(obj.authority),
       marketId: obj.marketId,
+      orderbook: new PublicKey(obj.orderbook),
       eventQueue: new PublicKey(obj.eventQueue),
       bids: new PublicKey(obj.bids),
       asks: new PublicKey(obj.asks),
