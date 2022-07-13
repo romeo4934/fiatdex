@@ -10,6 +10,7 @@ pub struct Market {
     pub bumps: AobBumps,
     pub authority: Pubkey,
     pub market_id: [u8; 10],
+    pub orderbook: Pubkey,
     pub event_queue: Pubkey,
     pub bids: Pubkey,
     pub asks: Pubkey,

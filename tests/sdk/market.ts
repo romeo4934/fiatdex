@@ -11,6 +11,8 @@ export interface Market {
   market: PublicKey,
   eventQueue: PublicKey,
   eventQueueKeypair?: Keypair,
+  orderbook: PublicKey,
+  orderbookKeypair?: Keypair,
   bids: PublicKey,
   bidsKeypair?: Keypair,
   asks: PublicKey,
@@ -59,6 +61,8 @@ export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: 
     [Buffer.from("base_vault"), Buffer.from(marketId), wallet.publicKey.toBuffer()],
     program.programId
   )
+  let orderbookKeypair = new anchor.web3.Keypair();
+  let orderbook = orderbookKeypair.publicKey;
   let eventQueueKeypair = new anchor.web3.Keypair();
   let eventQueue = eventQueueKeypair.publicKey;
   let bidsKeypair = new anchor.web3.Keypair();
@@ -70,6 +74,8 @@ export async function initMarketObj(program: anchor.Program<Fiatdex>, provider: 
     market,
     eventQueue,
     eventQueueKeypair,
+    orderbook,
+    orderbookKeypair,
     bids,
     bidsKeypair,
     asks,

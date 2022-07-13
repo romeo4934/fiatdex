@@ -121,7 +121,8 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
 
     msg!("BOUBOUBOU: MIMIIIIIIIIII");
     msg!("BOUBOUBOU: {:?}",  ctx.program_id);
-    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.event_queue);
+    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.market);
+    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.market.to_account_info());
 
     let space = EventQueue::<[u8; 32]>::compute_allocation_size(1000);
 
