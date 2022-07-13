@@ -7,6 +7,7 @@ use crate::error::CustomErrors;
 use crate::program_accounts::*;
 
 use agnostic_orderbook::state::{Side,SelfTradeBehavior};
+use agnostic_orderbook::error::AoError;
 
 
 #[derive(Accounts)]
@@ -86,27 +87,29 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
 
     //let aob_accounts = ;
 
-    let mut order_summary =
+    let invoke_params = agnostic_orderbook::instruction::new_order::Params {
+        max_base_qty: 50_000,
+        max_quote_qty: 1_000_000_000,
+        limit_price: 15 << 32,
+        side: Side::Bid,
+        match_limit: 10,
+        callback_info: alice,
+        post_only: false,
+        post_allowed: true,
+        self_trade_behavior: SelfTradeBehavior::AbortTransaction,
+    };
+
+    if let Err(error) =
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
             market: &ctx.accounts.orderbook,
             asks: &ctx.accounts.asks,
             bids: &ctx.accounts.bids,
             event_queue: &ctx.accounts.event_queue,
-        }, agnostic_orderbook::instruction::new_order::Params {
-            max_base_qty: 50_000,
-            max_quote_qty: 1_000_000_000,
-            limit_price: 15 << 32,
-            side: Side::Bid,
-            match_limit: 10,
-            callback_info: alice,
-            post_only: false,
-            post_allowed: true,
-            self_trade_behavior: SelfTradeBehavior::AbortTransaction,
-        });
-    
-    
-    
-    
+        }, invoke_params,
+    ) {
+        msg!("{}", error);
+        return Err(error!(CustomErrors::InvalidOrder))
+    }
     Ok(())
 }
 

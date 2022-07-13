@@ -8,4 +8,6 @@ pub enum CustomErrors {
     InvalidAobMarketState, // 6001
     #[msg("Impossible to create the market")]
     InvalidMarket, // 6002
+    #[msg("Impossible to create a maker order")]
+    InvalidOrder, // 6003
 }
