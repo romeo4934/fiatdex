@@ -120,13 +120,8 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         tick_size: tick_size,
     };
 
-    
-
-    
-
-    
-    
-
+    msg!("OrderBook: {:?}",  ctx.accounts.orderbook.key());
+    msg!("Market: {:?}",  ctx.accounts.market.key());
     
     if let Err(error) = agnostic_orderbook::instruction::create_market::process::<[u8; 32]>(
         ctx.program_id,

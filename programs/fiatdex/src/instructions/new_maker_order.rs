@@ -8,6 +8,7 @@ use crate::program_accounts::*;
 
 use agnostic_orderbook::state::{Side,SelfTradeBehavior};
 use agnostic_orderbook::error::AoError;
+use agnostic_orderbook::state::market_state::MarketState;
 
 use anchor_lang::solana_program::program_error::PrintProgramError;
 
@@ -102,6 +103,11 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
     };
 
     msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
+
+   
+    msg!("OrderBOok2: {:?}",  ctx.accounts.orderbook);
+    msg!("MARKET SPACE: {:?}",  MarketState::LEN);
+
 
     if let Err(custom2) =
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {

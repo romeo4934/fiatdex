@@ -5,7 +5,7 @@ version = 3
 [[package]]
 name = "agnostic-orderbook"
 version = "1.0.0"
-source = "git+https://github.com/antoineherzog/agnostic-orderbook?rev=4436a7091af32096ee9bda7c28916cb759117adc#4436a7091af32096ee9bda7c28916cb759117adc"
+source = "git+https://github.com/Bonfida/agnostic-orderbook#9ba478a9ca4ab37e7b45e198e4fcc3b99e7d4e74"
 dependencies = [
  "bonfida-utils",
  "borsh",

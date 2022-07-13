@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { BN } from "@project-serum/anchor";
 import { Program, ProgramError } from "@project-serum/anchor";
+import { EventQueue, SlabHeader, Slab } from "@bonfida/aaob";
 import {
   createAssociatedTokenAccount,
   createMint,
@@ -50,12 +51,21 @@ describe("fiatdex", () => {
   const tickSizeNum = 0.1;
   const tickSize = toFp32(tickSizeNum);
   const eventQueueBytes = 104032;
-  const bidsBytes = 104032;
-  const asksBytes = 104032;
+  const bidsBytes = 8840;
+  const asksBytes = 8840;
   const orderbookBytes = 120;
 
   let market: Market;
   let users: Array<User> = [];
+
+  console.log("OK!! ");
+
+  let sizeEvent = EventQueue.computeAllocationSize(100, 32); // EventQueue.computeAllocationSize(eventCapacity, callbackInfoLen);
+
+  const slabSize = Slab.computeAllocationSize(100, 32); //Slab.computeAllocationSize(orderCapacity, callbackInfoLen);
+
+  console.log("SizeEVent ", sizeEvent);
+  console.log("Ask ", slabSize);
 
 
   it("inits the market", async () => {
