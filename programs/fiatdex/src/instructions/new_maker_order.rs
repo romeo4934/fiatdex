@@ -83,33 +83,16 @@ pub struct NewMakerOrder<'info> {
 pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_qty: u64) -> Result<()> {
     
     let alice = [1; 32];
-    let invoke_params = agnostic_orderbook::instruction::new_order::Params {
-        max_base_qty: 50_000,
-        max_quote_qty: 1_000_000_000,
-        limit_price: 15 << 32,
-        side: Side::Bid,
-        match_limit: 10,
-        callback_info: alice,
-        post_only: false,
-        post_allowed: true,
-        self_trade_behavior: SelfTradeBehavior::AbortTransaction,
-    };
 
-    /*
+    //let aob_accounts = ;
 
-    let aob_param = agnostic_orderbook::instruction::new_order::Params {
-        max_base_qty: qty,
-        max_quote_qty: u64::MAX,
-        limit_price: interest_rate,
-        side: side,
-        match_limit: 10000,
-        post_only: false,
-        post_allowed: true,
-        callback_info: ctx.accounts.user_account.key().to_bytes().to_vec(),
-        self_trade_behavior: agnostic_orderbook::state::SelfTradeBehavior::AbortTransaction,
-    };
-    let alice = [1; 32];
-    let invoke_params = agnostic_orderbook::instruction::new_order::Params {
+    let mut order_summary =
+        agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
+            market: &ctx.accounts.orderbook,
+            asks: &ctx.accounts.asks,
+            bids: &ctx.accounts.bids,
+            event_queue: &ctx.accounts.event_queue,
+        }, agnostic_orderbook::instruction::new_order::Params {
             max_base_qty: 50_000,
             max_quote_qty: 1_000_000_000,
             limit_price: 15 << 32,
@@ -119,24 +102,10 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
             post_only: false,
             post_allowed: true,
             self_trade_behavior: SelfTradeBehavior::AbortTransaction,
-        };
-
-    let aob_accounts = agnostic_orderbook::instruction::new_order::Accounts {
-        market: &ctx.accounts.orderbook,
-        asks: &ctx.accounts.asks,
-        bids: &ctx.accounts.bids,
-        event_queue: &ctx.accounts.event_queue,
-        authority: &ctx.accounts.system_program.to_account_info(),
-    };
-
-    if let Err(err) =
-        agnostic_orderbook::instruction::new_order::process(ctx.program_id, aob_accounts, aob_param)
-    {
-        msg!("{}", err);
-        return Err(err);
-    }
-
-    */
+        });
+    
+    
+    
     
     Ok(())
 }
@@ -156,4 +125,36 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
         };
         
         // Ok(())
+
+        /*
+
+    let aob_param = agnostic_orderbook::instruction::new_order::Params {
+        max_base_qty: qty,
+        max_quote_qty: u64::MAX,
+        limit_price: interest_rate,
+        side: side,
+        match_limit: 10000,
+        post_only: false,
+        post_allowed: true,
+        callback_info: ctx.accounts.user_account.key().to_bytes().to_vec(),
+        self_trade_behavior: agnostic_orderbook::state::SelfTradeBehavior::AbortTransaction,
+    };
+    
+
+    let aob_accounts = agnostic_orderbook::instruction::new_order::Accounts {
+        market: &ctx.accounts.orderbook,
+        asks: &ctx.accounts.asks,
+        bids: &ctx.accounts.bids,
+        event_queue: &ctx.accounts.event_queue,
+        authority: &ctx.accounts.system_program.to_account_info(),
+    };
+
+    if let Err(err) =
+        agnostic_orderbook::instruction::new_order::process(ctx.program_id, aob_accounts, aob_param)
+    {
+        msg!("{}", err);
+        return Err(err);
+    }
+
+    */
 */
