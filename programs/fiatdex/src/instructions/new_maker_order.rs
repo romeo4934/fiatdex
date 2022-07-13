@@ -9,6 +9,8 @@ use crate::program_accounts::*;
 use agnostic_orderbook::state::{Side,SelfTradeBehavior};
 use agnostic_orderbook::error::AoError;
 
+use anchor_lang::solana_program::program_error::PrintProgramError;
+
 
 #[derive(Accounts)]
 pub struct NewMakerOrder<'info> {
@@ -88,18 +90,20 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
     //let aob_accounts = ;
 
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
-        max_base_qty: 50_000,
-        max_quote_qty: 1_000_000_000,
-        limit_price: 15 << 32,
-        side: Side::Bid,
-        match_limit: 10,
+        max_base_qty: max_base_qty,
+        max_quote_qty: u64::MAX,
+        limit_price: limit_price,
+        side: Side::Ask,
+        match_limit: 1,
         callback_info: alice,
-        post_only: false,
+        post_only: true,
         post_allowed: true,
         self_trade_behavior: SelfTradeBehavior::AbortTransaction,
     };
 
-    if let Err(error) =
+    msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
+
+    if let Err(custom2) =
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
             market: &ctx.accounts.orderbook,
             asks: &ctx.accounts.asks,
@@ -107,7 +111,10 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
             event_queue: &ctx.accounts.event_queue,
         }, invoke_params,
     ) {
-        msg!("{}", error);
+        
+        msg!("BOUBOUBOU2: {:?}",  custom2);
+        let final2 = custom2.print::<AoError>();
+        msg!("BOUBOUBOU2: {:?}", final2) ;
         return Err(error!(CustomErrors::InvalidOrder))
     }
     Ok(())

@@ -20,27 +20,27 @@ export interface User {
   side: genTypes.SideKind,
 }
 
-export async function initUser(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, auction: Auction, side: genTypes.SideKind, numBaseTokens: BN, numQuoteTokens: BN, maxOrders: BN): Promise<User> {
+export async function initUser(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, market: Market, side: genTypes.SideKind, numBaseTokens: BN, numQuoteTokens: BN): Promise<User> {
   let userKeypair = new anchor.web3.Keypair();
   let user = userKeypair.publicKey;
   await provider.connection.requestAirdrop(user, 1_000_000_00)
   let userBase = await createAssociatedTokenAccount(
     provider.connection,
     wallet.payer,
-    auction.baseMint,
+    market.baseMint,
     user
   );
   let userQuote = await createAssociatedTokenAccount(
     provider.connection,
     wallet.payer,
-    auction.quoteMint,
+    market.quoteMint,
     user
   );
   if (numBaseTokens.gt(new BN(0))) {
     await mintTo(
       provider.connection,
       wallet.payer,
-      auction.baseMint,
+      market.baseMint,
       userBase,
       wallet.publicKey,
       numBaseTokens.toNumber(),
@@ -50,18 +50,18 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
     await mintTo(
       provider.connection,
       wallet.payer,
-      auction.quoteMint,
+      market.quoteMint,
       userQuote,
       wallet.publicKey,
       numQuoteTokens.toNumber(),
     );
   }
   let [openOrders] = await anchor.web3.PublicKey.findProgramAddress(
-    [user.toBuffer(), Buffer.from("open_orders"), Buffer.from(auction.auctionId), wallet.publicKey.toBuffer()],
+    [user.toBuffer(), Buffer.from("open_orders"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
     program.programId
   );
   let [orderHistory] = await anchor.web3.PublicKey.findProgramAddress(
-    [user.toBuffer(), Buffer.from("order_history"), Buffer.from(auction.auctionId), wallet.publicKey.toBuffer()],
+    [user.toBuffer(), Buffer.from("order_history"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
     program.programId
   );
   return {

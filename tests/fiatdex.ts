@@ -21,8 +21,10 @@ import {
 import {
   Market,
   User,
+  initUser,
   initMarketObj,
   toFp32,
+  toFpLimitPrice,
   getCreateAccountParams
 } from "./sdk";
 
@@ -141,20 +143,20 @@ describe("fiatdex", () => {
       new anchor.BN(3_000_000),
       new anchor.BN(0),
     );
-    /*
+
     let tx = new anchor.web3.Transaction();
     tx.add(
-      genInstr.newOrder(
+      genInstr.newMakerOrder(
         {
           limitPrice: toFpLimitPrice(0.9, tickSizeNum),
           maxBaseQty: new BN(1_000_000),
         },
-        { ...thisAskUser, ...auction }
+        { ...thisAskUser, ...market }
       )
     );
 
-    await provider.send(tx, [thisAskUser.userKeypair], { skipPreflight: true });
-
+    await provider.sendAndConfirm(tx, [thisAskUser.userKeypair], { skipPreflight: true });
+    /*
     let thisOpenOrders = await genAccs.OpenOrders.fetch(
       provider.connection,
       thisAskUser.openOrders
