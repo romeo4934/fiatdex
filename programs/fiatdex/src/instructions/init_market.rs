@@ -116,16 +116,35 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
     };
 
 
-    let mut event_queue_data = ctx.accounts.event_queue.data.borrow_mut();
-    
-    //EventQueue::<BasicCallBack>::check_buffer_size(&ctx.accounts.event_queue.data.borrow();).unwrap();
+    let invoke_accounts= agnostic_orderbook::instruction::create_market::Accounts {
+        market: &ctx.accounts.market.to_account_info(),
+        event_queue: &ctx.accounts.event_queue.to_account_info(),
+        bids: &ctx.accounts.bids.to_account_info(),
+        asks: &ctx.accounts.asks.to_account_info(),
+    };
 
-   //EventQueue::<BasicCallBack>::from_buffer(&mut event_queue_data, AccountTag::Uninitialized)?;
+    msg!("Progam: MIMIIIIIIIIII");
+    msg!("Progam: {:?}",  ctx.program_id);
+
+    
+    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<BasicCallBack>(
+        ctx.program_id,
+        invoke_accounts,
+        invoke_params,
+    ) {
+        msg!("{}", error);
+        return Err(error!(CustomErrors::InvalidMarket))
+    }
 
    
 
     /*
 
+    let mut event_queue_data = ctx.accounts.event_queue.data.borrow_mut();
+    
+
+
+   EventQueue::<BasicCallBack>::from_buffer(&mut event_queue_data, AccountTag::Uninitialized)?;
     
 
     EventQueue::<C>::from_buffer(&mut event_queue_data, AccountTag::Uninitialized)?;
