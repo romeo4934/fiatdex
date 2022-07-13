@@ -116,8 +116,8 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
     });
 
     let invoke_params = agnostic_orderbook::instruction::create_market::Params {
-        min_base_order_size: 10,
-        tick_size: 10,
+        min_base_order_size: min_base_order_size,
+        tick_size: tick_size,
     };
 
     
