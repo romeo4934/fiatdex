@@ -7,11 +7,6 @@ use crate::error::CustomErrors;
 use crate::program_accounts::*;
 use crate::types::*;
 
-use agnostic_orderbook::state::critbit::Slab;
-use agnostic_orderbook::state::event_queue::EventQueueHeader;
-
-use agnostic_orderbook::state::{Side,SelfTradeBehavior};
-
 use crate::consts::*;
 use crate::program_accounts::*;
 
@@ -110,20 +105,31 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         bid_search_stack_values: [0; 32],
     });
 
-    // Init event queue
-    let event_queue_header = EventQueueHeader::initialize(CALLBACK_INFO_LEN);
-    event_queue_header
-        .serialize(&mut (&mut ctx.accounts.event_queue.data.borrow_mut() as &mut [u8]))
-        .unwrap();
+    let invoke_params = agnostic_orderbook::instruction::create_market::Params {
+        min_base_order_size: min_base_order_size,
+        tick_size: tick_size,
+    };
 
-    // Init orderbook
-    Slab::initialize(
-        &ctx.accounts.bids,
-        &ctx.accounts.asks,
-        ctx.accounts.market.key(),
-        CALLBACK_INFO_LEN,
-    );
+    
+    
+    let invoke_accounts= agnostic_orderbook::instruction::create_market::Accounts {
+        market: &ctx.accounts.market.to_account_info(),
+        event_queue: &ctx.accounts.event_queue.to_account_info(),
+        bids: &ctx.accounts.bids.to_account_info(),
+        asks: &ctx.accounts.asks.to_account_info(),
+    };
+    
 
+    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<BasicCallBack>(
+        ctx.program_id,
+        invoke_accounts,
+        invoke_params,
+    ) {
+        msg!("{}", error);
+        return Err(error!(CustomErrors::InvalidMarket))
+    }
+
+    /*
     let this = Side::Ask;
     match this {
         Side::Bid => {
@@ -133,5 +139,10 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
             msg!("hey it's an ask");
         }
     };
+
+    */
+    
     Ok(())
+
+
 }

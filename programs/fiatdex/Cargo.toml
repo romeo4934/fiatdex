@@ -21,5 +21,7 @@ overflow-checks = true
 [dependencies]
 anchor-lang = "0.24.2"
 anchor-spl="0.24.2"
-agnostic-orderbook = {git = "https://github.com/Bonfida/agnostic-orderbook.git"}
+agnostic-orderbook = {git = "https://github.com/Bonfida/agnostic-orderbook.git", features = ["lib"]}
 bytemuck = {version = "1.7.2", features= ["derive"]}
+borsh = "0.9.1"
+num-derive = "0.3.3"

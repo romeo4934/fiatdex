@@ -601,7 +601,9 @@ dependencies = [
  "agnostic-orderbook",
  "anchor-lang",
  "anchor-spl",
+ "borsh",
  "bytemuck",
+ "num-derive",
 ]
 
 [[package]]

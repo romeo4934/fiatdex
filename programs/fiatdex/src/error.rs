@@ -6,4 +6,6 @@ pub enum CustomErrors {
     NotImplemented, // 6000
     #[msg("Invalid account data on AOB market state")]
     InvalidAobMarketState, // 6001
+    #[msg("Impossible to create the market")]
+    InvalidMarket, // 6002
 }
