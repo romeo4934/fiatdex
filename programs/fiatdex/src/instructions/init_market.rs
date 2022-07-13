@@ -115,21 +115,27 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         tick_size: 10,
     };
 
-
-    let invoke_accounts= agnostic_orderbook::instruction::create_market::Accounts {
-        market: &ctx.accounts.market.to_account_info(),
-        event_queue: &ctx.accounts.event_queue.to_account_info(),
-        bids: &ctx.accounts.bids.to_account_info(),
-        asks: &ctx.accounts.asks.to_account_info(),
-    };
-
-    msg!("Progam: MIMIIIIIIIIII");
-    msg!("Progam: {:?}",  ctx.program_id);
+    
 
     
-    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<BasicCallBack>(
+
+    msg!("BOUBOUBOU: MIMIIIIIIIIII");
+    msg!("BOUBOUBOU: {:?}",  ctx.program_id);
+    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.event_queue);
+
+    let space = EventQueue::<[u8; 32]>::compute_allocation_size(1000);
+
+    msg!("SPACE: {:?}",  space);
+
+    
+    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<[u8; 32]>(
         ctx.program_id,
-        invoke_accounts,
+        agnostic_orderbook::instruction::create_market::Accounts {
+            market: &ctx.accounts.market.to_account_info(),
+            event_queue: &ctx.accounts.event_queue,
+            bids: &ctx.accounts.bids,
+            asks: &ctx.accounts.asks,
+        },
         invoke_params,
     ) {
         msg!("{}", error);
