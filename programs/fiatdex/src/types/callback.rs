@@ -3,7 +3,9 @@ use borsh::{BorshDeserialize, BorshSerialize};
 use bytemuck::{try_cast_slice_mut, try_from_bytes_mut, Pod, Zeroable};
 use num_derive::{FromPrimitive, ToPrimitive};
 
-use anchor_lang::prelude::Pubkey;
+use anchor_lang::solana_program::{
+    account_info::AccountInfo, msg, program_error::ProgramError, program_pack::Pack, pubkey::Pubkey,
+};
 
 #[derive(BorshDeserialize, BorshSerialize, Debug, Clone, Copy, Zeroable, Pod, PartialEq)]
 #[repr(C)]

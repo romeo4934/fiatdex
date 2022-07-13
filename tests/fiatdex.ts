@@ -36,7 +36,7 @@ import { assert, expect } from "chai";
 describe("fiatdex", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
-  // const provider = anchor.Provider.env();
+
   const wallet = provider.wallet as anchor.Wallet;
   anchor.setProvider(anchor.AnchorProvider.env());
 
@@ -95,7 +95,7 @@ describe("fiatdex", () => {
     tx.add(anchor.web3.SystemProgram.createAccount(asksParams));
 
     tx.add(genInstr.initMarket({ ...market }, { ...market }));
-
+    console.log("TEST");
     await provider.sendAndConfirm(
       tx,
       [market.eventQueueKeypair, market.bidsKeypair, market.asksKeypair],
@@ -103,7 +103,7 @@ describe("fiatdex", () => {
     );
 
 
-
+    /*
     let thisMarket = await genAccs.Market.fetch(
       provider.connection,
       market.market
@@ -113,6 +113,8 @@ describe("fiatdex", () => {
       thisMarket.marketId.toString() == marketId.toString(),
       "market Ids match"
     );
+
+    */
 
 
     //const tx = await program.methods.initMarket().rpc();

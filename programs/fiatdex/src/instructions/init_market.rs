@@ -10,6 +10,11 @@ use crate::types::*;
 use crate::consts::*;
 use crate::program_accounts::*;
 
+use agnostic_orderbook::state::event_queue::EventQueue;
+use agnostic_orderbook::state::AccountTag;
+use agnostic_orderbook::state::critbit::Slab;
+
+
 
 // Flexible on design decisions such as:
 // - Using start time as part of the seeds to allow more than one auction
@@ -106,20 +111,57 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
     });
 
     let invoke_params = agnostic_orderbook::instruction::create_market::Params {
-        min_base_order_size: min_base_order_size,
-        tick_size: tick_size,
+        min_base_order_size: 10,
+        tick_size: 10,
     };
 
+
+    let mut event_queue_data = ctx.accounts.event_queue.data.borrow_mut();
     
+    //EventQueue::<BasicCallBack>::check_buffer_size(&ctx.accounts.event_queue.data.borrow();).unwrap();
+
+   //EventQueue::<BasicCallBack>::from_buffer(&mut event_queue_data, AccountTag::Uninitialized)?;
+
+   
+
+    /*
+
     
+
+    EventQueue::<C>::from_buffer(&mut event_queue_data, AccountTag::Uninitialized)?;
+
+    
+
+
+    // Init event queue
+    let event_queue_header = EventQueueHeader::initialize(CALLBACK_INFO_LEN);
+    event_queue_header
+        .serialize(&mut (&mut ctx.accounts.event_queue.data.borrow_mut() as &mut [u8]))
+        .unwrap();
+
+    // Init orderbook
+    Slab::initialize(
+        &ctx.accounts.bids,
+        &ctx.accounts.asks,
+        ctx.accounts.auction.key(),
+        CALLBACK_INFO_LEN,
+    );
+
+    
+    ---------
+
+
     let invoke_accounts= agnostic_orderbook::instruction::create_market::Accounts {
         market: &ctx.accounts.market.to_account_info(),
         event_queue: &ctx.accounts.event_queue.to_account_info(),
         bids: &ctx.accounts.bids.to_account_info(),
         asks: &ctx.accounts.asks.to_account_info(),
     };
-    
 
+
+    msg!("Progam: {:?}",  ctx.program_id);
+
+    
     if let Err(error) = agnostic_orderbook::instruction::create_market::process::<BasicCallBack>(
         ctx.program_id,
         invoke_accounts,
@@ -129,18 +171,10 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         return Err(error!(CustomErrors::InvalidMarket))
     }
 
-    /*
-    let this = Side::Ask;
-    match this {
-        Side::Bid => {
-            msg!("hey it's a bid");
-        }
-        Side::Ask => {
-            msg!("hey it's an ask");
-        }
-    };
-
     */
+    
+
+    
     
     Ok(())
 
