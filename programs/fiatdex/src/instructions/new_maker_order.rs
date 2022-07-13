@@ -105,10 +105,6 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
     msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
 
    
-    msg!("OrderBOok2: {:?}",  ctx.accounts.orderbook);
-    msg!("MARKET SPACE: {:?}",  MarketState::LEN);
-
-
     if let Err(custom2) =
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
             market: &ctx.accounts.orderbook,
@@ -118,59 +114,10 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
         }, invoke_params,
     ) {
         
-        msg!("BOUBOUBOU2: {:?}",  custom2);
-        let final2 = custom2.print::<AoError>();
-        msg!("BOUBOUBOU2: {:?}", final2) ;
+        let error_display = custom2.print::<AoError>();
+        msg!("Error: {:?}", error_display) ;
         return Err(error!(CustomErrors::InvalidOrder))
     }
     Ok(())
 }
-
-/*
-        let alice = [1; 32];
-        let invoke_params = agnostic_orderbook::instruction::new_order::Params {
-            max_base_qty: 50_000,
-            max_quote_qty: 1_000_000_000,
-            limit_price: 15 << 32,
-            side: Side::Bid,
-            match_limit: 10,
-            callback_info: alice,
-            post_only: false,
-            post_allowed: true,
-            self_trade_behavior: SelfTradeBehavior::AbortTransaction,
-        };
-        
-        // Ok(())
-
-        /*
-
-    let aob_param = agnostic_orderbook::instruction::new_order::Params {
-        max_base_qty: qty,
-        max_quote_qty: u64::MAX,
-        limit_price: interest_rate,
-        side: side,
-        match_limit: 10000,
-        post_only: false,
-        post_allowed: true,
-        callback_info: ctx.accounts.user_account.key().to_bytes().to_vec(),
-        self_trade_behavior: agnostic_orderbook::state::SelfTradeBehavior::AbortTransaction,
-    };
-    
-
-    let aob_accounts = agnostic_orderbook::instruction::new_order::Accounts {
-        market: &ctx.accounts.orderbook,
-        asks: &ctx.accounts.asks,
-        bids: &ctx.accounts.bids,
-        event_queue: &ctx.accounts.event_queue,
-        authority: &ctx.accounts.system_program.to_account_info(),
-    };
-
-    if let Err(err) =
-        agnostic_orderbook::instruction::new_order::process(ctx.program_id, aob_accounts, aob_param)
-    {
-        msg!("{}", err);
-        return Err(err);
-    }
-
-    */
 */

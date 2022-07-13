@@ -17,7 +17,8 @@ pub struct NewTakerOrder<'info> {
 }
 
 /*
-
+    msg!("BOUBOUBOU2: {:?}", final2) ;
+    msg!("BOUBOUBOU2: {:?}",  custom2);
     msg!("BOUBOUBOU: MIMIIIIIIIIII");
     msg!("BOUBOUBOU: {:?}",  ctx.program_id);
     msg!("BOUBOUBOU2: {:?}",  ctx.accounts.orderbook);
