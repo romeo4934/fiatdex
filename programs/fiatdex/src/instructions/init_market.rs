@@ -12,6 +12,7 @@ use crate::program_accounts::*;
 
 use agnostic_orderbook::state::event_queue::EventQueue;
 use agnostic_orderbook::state::AccountTag;
+use agnostic_orderbook::state::market_state::MarketState;
 use agnostic_orderbook::state::critbit::Slab;
 
 
@@ -125,18 +126,20 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
 
     msg!("BOUBOUBOU: MIMIIIIIIIIII");
     msg!("BOUBOUBOU: {:?}",  ctx.program_id);
-    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.market);
-    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.market.to_account_info());
+    msg!("BOUBOUBOU2: {:?}",  ctx.accounts.orderbook);
+    //msg!("BOUBOUBOU2: {:?}",  ctx.accounts.market.to_account_info());
 
-    let space = EventQueue::<[u8; 32]>::compute_allocation_size(1000);
+    //let space = EventQueue::<[u8; 32]>::compute_allocation_size(1000);
 
-    msg!("SPACE: {:?}",  space);
+    // msg!("SPACE: {:?}",  space);
+    msg!("MARKET SPACE: {:?}",  MarketState::LEN);
+    
 
     
     if let Err(error) = agnostic_orderbook::instruction::create_market::process::<[u8; 32]>(
         ctx.program_id,
         agnostic_orderbook::instruction::create_market::Accounts {
-            market: &ctx.accounts.market.to_account_info(),
+            market: &ctx.accounts.orderbook,
             event_queue: &ctx.accounts.event_queue,
             bids: &ctx.accounts.bids,
             asks: &ctx.accounts.asks,

@@ -48,10 +48,10 @@ describe("fiatdex", () => {
   const tickSizeNum = 0.1;
   const tickSize = toFp32(tickSizeNum);
   const eventQueueBytes = 104032;
-  const bidsBytes = 64000;
-  const asksBytes = 64000;
-  const orderbookBytes = 64000;
-  const maxOrders = new BN(2);
+  const bidsBytes = 104032;
+  const asksBytes = 104032;
+  const orderbookBytes = 120;
+  //const maxOrders = new BN(2);
 
   let market: Market;
   let users: Array<User> = [];
