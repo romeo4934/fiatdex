@@ -112,7 +112,7 @@ describe("fiatdex", () => {
     );
 
 
-    /*
+
     let thisMarket = await genAccs.Market.fetch(
       provider.connection,
       market.market
@@ -123,7 +123,7 @@ describe("fiatdex", () => {
       "market Ids match"
     );
 
-    */
+
 
 
     //const tx = await program.methods.initMarket().rpc();
