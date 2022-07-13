@@ -1,4 +1,8 @@
-export type CustomError = NotImplemented | InvalidAobMarketState | InvalidMarket
+export type CustomError =
+  | NotImplemented
+  | InvalidAobMarketState
+  | InvalidMarket
+  | InvalidOrder
 
 export class NotImplemented extends Error {
   static readonly code = 6000
@@ -33,6 +37,17 @@ export class InvalidMarket extends Error {
   }
 }
 
+export class InvalidOrder extends Error {
+  static readonly code = 6003
+  readonly code = 6003
+  readonly name = "InvalidOrder"
+  readonly msg = "Impossible to create a maker order"
+
+  constructor(readonly logs?: string[]) {
+    super("6003: Impossible to create a maker order")
+  }
+}
+
 export function fromCode(code: number, logs?: string[]): CustomError | null {
   switch (code) {
     case 6000:
@@ -41,6 +56,8 @@ export function fromCode(code: number, logs?: string[]): CustomError | null {
       return new InvalidAobMarketState(logs)
     case 6002:
       return new InvalidMarket(logs)
+    case 6003:
+      return new InvalidOrder(logs)
   }
 
   return null
