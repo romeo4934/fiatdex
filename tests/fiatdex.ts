@@ -130,4 +130,42 @@ describe("fiatdex", () => {
     // console.log("Your transaction signature", tx);
     console.log("Ca tourne");
   });
+
+  it("create maker order", async () => {
+    let thisAskUser = await initUser(
+      program,
+      provider,
+      wallet,
+      market,
+      new genTypes.Side.Ask(),
+      new anchor.BN(3_000_000),
+      new anchor.BN(0),
+    );
+    /*
+    let tx = new anchor.web3.Transaction();
+    tx.add(
+      genInstr.newOrder(
+        {
+          limitPrice: toFpLimitPrice(0.9, tickSizeNum),
+          maxBaseQty: new BN(1_000_000),
+        },
+        { ...thisAskUser, ...auction }
+      )
+    );
+
+    await provider.send(tx, [thisAskUser.userKeypair], { skipPreflight: true });
+
+    let thisOpenOrders = await genAccs.OpenOrders.fetch(
+      provider.connection,
+      thisAskUser.openOrders
+    );
+    assert.isTrue(
+      thisOpenOrders.numOrders == 2,
+      "check both orders have been placed"
+    );
+
+    console.log("The end");
+    */
+  });
+
 });
