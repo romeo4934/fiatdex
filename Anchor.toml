@@ -1,7 +1,7 @@
 [features]
 seeds = false
 [programs.localnet]
-fiatdex = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+fiatdex = "5f3Q4hsMW3UboR9nhwYvDWjLUVJpnNm545hekKe1Gs3W"
 
 [registry]
 url = "https://anchor.projectserum.com"

@@ -13,7 +13,7 @@ pub mod program_accounts;
 pub mod instructions;
 pub mod types;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("5f3Q4hsMW3UboR9nhwYvDWjLUVJpnNm545hekKe1Gs3W");
 
 #[program]
 pub mod fiatdex {
