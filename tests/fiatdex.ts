@@ -51,7 +51,6 @@ describe("fiatdex", () => {
   const bidsBytes = 104032;
   const asksBytes = 104032;
   const orderbookBytes = 120;
-  //const maxOrders = new BN(2);
 
   let market: Market;
   let users: Array<User> = [];
