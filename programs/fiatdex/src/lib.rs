@@ -23,8 +23,8 @@ pub mod fiatdex {
         instructions::init_market(ctx, market_id, min_base_order_size, tick_size)
     }
 
-    pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64) -> Result<()> {
-        instructions::new_order(ctx, side, limit_price, max_base_qty)
+    pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64, is_broker: bool) -> Result<()> {
+        instructions::new_order(ctx, side, limit_price, max_base_qty, is_broker)
     }
 
     pub fn new_taker_order(_ctx: Context<InitMarket>) -> Result<()> {

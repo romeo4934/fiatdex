@@ -8,6 +8,7 @@ export interface NewOrderArgs {
   side: types.SideKind
   limitPrice: BN
   maxBaseQty: BN
+  isBroker: boolean
 }
 
 export interface NewOrderAccounts {
@@ -30,6 +31,7 @@ export const layout = borsh.struct([
   types.Side.layout("side"),
   borsh.u64("limitPrice"),
   borsh.u64("maxBaseQty"),
+  borsh.bool("isBroker"),
 ])
 
 export function newOrder(args: NewOrderArgs, accounts: NewOrderAccounts) {
@@ -55,6 +57,7 @@ export function newOrder(args: NewOrderArgs, accounts: NewOrderAccounts) {
       side: args.side.toEncodable(),
       limitPrice: args.limitPrice,
       maxBaseQty: args.maxBaseQty,
+      isBroker: args.isBroker,
     },
     buffer
   )

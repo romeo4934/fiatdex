@@ -149,8 +149,8 @@ describe("fiatdex", () => {
       provider,
       wallet,
       market,
-      new genTypes.Side.Ask(),
-      new anchor.BN(3_000_000),
+      new genTypes.Side.Bid(),
+      new anchor.BN(1_000_000),
       new anchor.BN(0),
     );
 
@@ -160,9 +160,10 @@ describe("fiatdex", () => {
     tx.add(
       genInstr.newOrder(
         {
-          side: new genTypes.Side.Ask(),
+          side: new genTypes.Side.Bid(),
           limitPrice: toFpLimitPrice(0.9, tickSizeNum),
           maxBaseQty: new BN(1_000_000),
+          isBroker: true,
         },
         { ...thisAskUser, ...market }
       )
