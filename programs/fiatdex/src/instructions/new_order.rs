@@ -93,13 +93,14 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
     let post_only;
     let post_allowed;
 
+    // Broker should be only a maker and other users should be always a taker
     if is_broker {
         (post_only, post_allowed)=(true, true);
     } else {
         (post_only, post_allowed)=(false, false);
     }
 
-    msg!("Broker: {}, Side: {}, max base qty: {}, limit price in FP32: {}",is_broker,  side, max_base_qty, limit_price);
+    msg!("is Broker?: {}, Side: {}, max base qty: {}, limit price in FP32: {}",is_broker,  side, max_base_qty, limit_price);
 
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
         max_base_qty: max_base_qty,
@@ -129,5 +130,8 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         msg!("Error: {:?}", error_display) ;
         return Err(error!(CustomErrors::InvalidOrder))
     }
+
+    // Verify how much tokens we should wire in the pending trading zone
+
     Ok(())
 }

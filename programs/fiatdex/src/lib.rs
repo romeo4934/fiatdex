@@ -27,7 +27,7 @@ pub mod fiatdex {
         instructions::new_order(ctx, side, limit_price, max_base_qty, is_broker)
     }
 
-    pub fn new_taker_order(_ctx: Context<InitMarket>) -> Result<()> {
-        Ok(())
+    pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u64,) -> Result<()> {
+        instructions::consume_order_events(ctx, max_iterations)
     }
 }
