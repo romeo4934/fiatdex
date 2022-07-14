@@ -143,7 +143,7 @@ describe("fiatdex", () => {
     console.log("Ca tourne");
   });
 
-  it("create maker order", async () => {
+  it("create order", async () => {
     let thisAskUser = await initUser(
       program,
       provider,
@@ -156,7 +156,7 @@ describe("fiatdex", () => {
 
     let tx = new anchor.web3.Transaction();
     tx.add(
-      genInstr.newMakerOrder(
+      genInstr.newOrder(
         {
           limitPrice: toFpLimitPrice(0.9, tickSizeNum),
           maxBaseQty: new BN(1_000_000),
