@@ -135,9 +135,6 @@ describe("fiatdex", () => {
       "market Ids match"
     );
 
-
-
-
     //const tx = await program.methods.initMarket().rpc();
     // console.log("Your transaction signature", tx);
     console.log("Ca tourne");
@@ -155,7 +152,8 @@ describe("fiatdex", () => {
     );
 
     let tx = new anchor.web3.Transaction();
-    console.log("Display Test---->", { ...thisAskUser, ...market });
+
+    //console.log("Display Test---->", { ...thisAskUser, ...market });
 
     tx.add(
       genInstr.newOrder(
@@ -170,6 +168,20 @@ describe("fiatdex", () => {
     );
 
     await provider.sendAndConfirm(tx, [thisAskUser.userKeypair], { skipPreflight: true });
+
+    /*
+        await program.rpc.consumeOrderEvents(new anchor.BN(10), {
+      accounts: {
+        eventQueue: eventQueue.publicKey,
+        orderbook: orderbook.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId
+      },
+      remainingAccounts: [
+        {pubkey: aliceUserAccount, isSigner: false, isWritable: true},
+        {pubkey: bobUserAccount, isSigner: false, isWritable: true},
+      ]
+    });
+    */
     /*
     let thisOpenOrders = await genAccs.OpenOrders.fetch(
       provider.connection,

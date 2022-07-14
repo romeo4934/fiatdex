@@ -88,15 +88,17 @@ pub struct NewOrder<'info> {
 pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64, is_broker: bool) -> Result<()> {
     
     
-    let alice = [1; 32];
+    let user; 
 
     let post_only;
     let post_allowed;
 
     // Broker should be only a maker and other users should be always a taker
     if is_broker {
+        user = [1; 32];
         (post_only, post_allowed)=(true, true);
     } else {
+        user = [2; 32];
         (post_only, post_allowed)=(false, false);
     }
 
@@ -108,7 +110,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         limit_price: limit_price,
         side: agnostic_orderbook::state::Side::from(side),
         match_limit: 1,
-        callback_info: alice,
+        callback_info: user,
         post_only: post_only,
         post_allowed: post_allowed,
         self_trade_behavior: SelfTradeBehavior::AbortTransaction,
