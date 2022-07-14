@@ -60,37 +60,6 @@ pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u6
         }
         total_iterations += 1;
     }
-
-    /*
-
-    ---- BALEX
-    let event_queue_header =
-        EventQueueHeader::deserialize(&mut (&ctx.accounts.event_queue.data.borrow() as &[u8]))?;
-    let event_queue = EventQueue::new(
-        event_queue_header,
-        Rc::clone(&ctx.accounts.event_queue.data),
-        CALLBACK_INFO_LEN as usize,
-    );
-    
-    ---- DEXV4
-    let mut event_queue_guard = accounts.event_queue.data.borrow_mut();
-    let event_queue =
-        EventQueue::<CallBackInfo>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
-
-    let mut total_iterations = 0;
-
-    for event in event_queue.iter().take(max_iterations as usize) {
-        if let Err(err) = consume_event(user_accounts, event) {
-            msg!("{}", err);
-            break;
-        }
-        total_iterations += 1;
-    }
-
-    */
-
-
-
     
 
     Ok(())
