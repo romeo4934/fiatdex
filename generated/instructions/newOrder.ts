@@ -5,6 +5,7 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface NewOrderArgs {
+  side: types.SideKind
   limitPrice: BN
   maxBaseQty: BN
 }
@@ -26,6 +27,7 @@ export interface NewOrderAccounts {
 }
 
 export const layout = borsh.struct([
+  types.Side.layout("side"),
   borsh.u64("limitPrice"),
   borsh.u64("maxBaseQty"),
 ])
@@ -50,6 +52,7 @@ export function newOrder(args: NewOrderArgs, accounts: NewOrderAccounts) {
   const buffer = Buffer.alloc(1000)
   const len = layout.encode(
     {
+      side: args.side.toEncodable(),
       limitPrice: args.limitPrice,
       maxBaseQty: args.maxBaseQty,
     },

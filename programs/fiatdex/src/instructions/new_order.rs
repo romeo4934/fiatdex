@@ -84,7 +84,8 @@ pub struct NewOrder<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn new_order(ctx: Context<NewOrder>, limit_price: u64, max_base_qty: u64) -> Result<()> {
+pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64) -> Result<()> {
+    
     
     let alice = [1; 32];
 
@@ -92,7 +93,7 @@ pub fn new_order(ctx: Context<NewOrder>, limit_price: u64, max_base_qty: u64) ->
         max_base_qty: max_base_qty,
         max_quote_qty: u64::MAX,
         limit_price: limit_price,
-        side: Side::Ask,
+        side: side,
         match_limit: 1,
         callback_info: alice,
         post_only: true,

@@ -155,9 +155,12 @@ describe("fiatdex", () => {
     );
 
     let tx = new anchor.web3.Transaction();
+    console.log("Display Test---->", { ...thisAskUser, ...market });
+
     tx.add(
       genInstr.newOrder(
         {
+          side: new genTypes.Side.Ask(),
           limitPrice: toFpLimitPrice(0.9, tickSizeNum),
           maxBaseQty: new BN(1_000_000),
         },
