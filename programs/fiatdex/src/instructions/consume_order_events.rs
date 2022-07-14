@@ -45,7 +45,22 @@ pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u6
         msg!("No user account provided");
         return Ok(());
     }
-    
+
+    let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
+
+    let event_queue =
+        EventQueue::<[u8; 32]>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
+
+    let mut total_iterations = 0;
+
+    for event in event_queue.iter().take(max_iterations as usize) {
+        if let Err(err) = consume_event(user_accounts, event) {
+            msg!("{}", err);
+            break;
+        }
+        total_iterations += 1;
+    }
+
     /*
 
     ---- BALEX
@@ -64,10 +79,6 @@ pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u6
 
     let mut total_iterations = 0;
 
-    */
-
-
-
     for event in event_queue.iter().take(max_iterations as usize) {
         if let Err(err) = consume_event(user_accounts, event) {
             msg!("{}", err);
@@ -76,6 +87,12 @@ pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u6
         total_iterations += 1;
     }
 
+    */
+
+
+
+    
+
     Ok(())
 }
 
@@ -83,5 +100,20 @@ fn consume_event(
     accounts_slice: &[AccountInfo],
     event: EventRef<[u8; 32]>,
 ) -> Result<()> {
+    match event {
+        EventRef::Fill(FillEventRef {
+            event,
+            maker_callback_info,
+            taker_callback_info,
+        }) => {
+            msg!("FILL!!");
+        }
+        EventRef::Out(OutEventRef {
+            event,
+            callback_info,
+        }) => {
+            msg!("OUT!");
+        }
+    };
     Ok(())
 }
