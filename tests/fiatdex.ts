@@ -140,7 +140,7 @@ describe("fiatdex", () => {
     console.log("Ca tourne");
   });
 
-  it("create order", async () => {
+  it("creates a new bid order", async () => {
     let thisBidUser = await initUser(
       program,
       provider,
@@ -150,6 +150,18 @@ describe("fiatdex", () => {
       new anchor.BN(1_000_000),
       new anchor.BN(0),
     );
+
+    let thisAskUser = await initUser(
+      program,
+      provider,
+      wallet,
+      market,
+      new genTypes.Side.Ask(),
+      new anchor.BN(1_000),
+      new anchor.BN(0),
+    );
+
+    users.push(thisAskUser, thisBidUser);
 
     let tx1 = new anchor.web3.Transaction();
 
@@ -168,20 +180,12 @@ describe("fiatdex", () => {
     );
 
     await provider.sendAndConfirm(tx1, [thisBidUser.userKeypair], { skipPreflight: true });
+  });
 
-    let thisAskUser = await initUser(
-      program,
-      provider,
-      wallet,
-      market,
-      new genTypes.Side.Ask(),
-      new anchor.BN(1_000),
-      new anchor.BN(0),
-    );
+  it("creates a new ask order", async () => {
 
     let tx2 = new anchor.web3.Transaction();
 
-    //console.log("Display Test---->", { ...thisAskUser, ...market });
 
     tx2.add(
       genInstr.newOrder(
@@ -191,37 +195,32 @@ describe("fiatdex", () => {
           maxBaseQty: new BN(1_000),
           isBroker: false,
         },
-        { ...thisAskUser, ...market }
+        { ...users[1], ...market }
       )
     );
 
-    await provider.sendAndConfirm(tx2, [thisAskUser.userKeypair], { skipPreflight: true });
+    await provider.sendAndConfirm(tx2, [users[1].userKeypair], { skipPreflight: true });
+  });
+  it("consumes events", async () => {
 
-    /*
-        await program.rpc.consumeOrderEvents(new anchor.BN(10), {
-      accounts: {
-        eventQueue: eventQueue.publicKey,
-        orderbook: orderbook.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId
+    let tx3 = new anchor.web3.Transaction();
+
+    let thisInstr = genInstr.consumeOrderEvents(
+      {
+        maxIterations: new BN(10),
       },
-      remainingAccounts: [
-        {pubkey: aliceUserAccount, isSigner: false, isWritable: true},
-        {pubkey: bobUserAccount, isSigner: false, isWritable: true},
-      ]
-    });
-    */
-    /*
-    let thisOpenOrders = await genAccs.OpenOrders.fetch(
-      provider.connection,
-      thisAskUser.openOrders
-    );
-    assert.isTrue(
-      thisOpenOrders.numOrders == 2,
-      "check both orders have been placed"
+      { ...market }
     );
 
-    console.log("The end");
-    */
+    // This is how we add remaining accounts to the transaction instruction
+    thisInstr.keys = thisInstr.keys.concat([
+      { pubkey: users[0].openOrders, isSigner: false, isWritable: true },
+      { pubkey: users[1].openOrders, isSigner: false, isWritable: true },
+    ]);
+    tx3.add(thisInstr);
+    await provider.sendAndConfirm(tx3, [], { skipPreflight: true });
+
+
   });
 
 });

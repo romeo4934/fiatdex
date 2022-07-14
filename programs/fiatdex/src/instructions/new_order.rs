@@ -140,7 +140,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         return Err(error!(CustomErrors::InvalidOrder))
     }
 
-    // Lets try!
+    // Display the first event of the list
 
     let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
 
