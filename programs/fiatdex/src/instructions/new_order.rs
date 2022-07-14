@@ -5,8 +5,9 @@ use anchor_spl::token::{self, Mint, Token, TokenAccount};
 use crate::consts::*;
 use crate::error::CustomErrors;
 use crate::program_accounts::*;
+use crate::types::*;
 
-use agnostic_orderbook::state::{Side,SelfTradeBehavior};
+use agnostic_orderbook::state::{SelfTradeBehavior};
 use agnostic_orderbook::error::AoError;
 use agnostic_orderbook::state::market_state::MarketState;
 
@@ -89,11 +90,13 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
     
     let alice = [1; 32];
 
+    msg!("Side: {}, max base qty: {}, limit price in FP32: {}", side, max_base_qty, limit_price);
+
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
         max_base_qty: max_base_qty,
         max_quote_qty: u64::MAX,
         limit_price: limit_price,
-        side: side,
+        side: agnostic_orderbook::state::Side::from(side),
         match_limit: 1,
         callback_info: alice,
         post_only: true,
@@ -101,7 +104,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         self_trade_behavior: SelfTradeBehavior::AbortTransaction,
     };
 
-    msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
+    
 
    
     if let Err(error) =

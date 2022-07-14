@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use agnostic_orderbook::state::{Side,SelfTradeBehavior};
+use agnostic_orderbook::state::{SelfTradeBehavior};
 
 use instructions::*;
 use types::*;
