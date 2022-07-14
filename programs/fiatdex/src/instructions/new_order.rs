@@ -14,7 +14,7 @@ use anchor_lang::solana_program::program_error::PrintProgramError;
 
 
 #[derive(Accounts)]
-pub struct NewMakerOrder<'info> {
+pub struct NewOrder<'info> {
     pub user: Signer<'info>,
     // Program Accounts
     #[account(
@@ -84,7 +84,7 @@ pub struct NewMakerOrder<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_qty: u64) -> Result<()> {
+pub fn new_order(ctx: Context<NewOrder>, limit_price: u64, max_base_qty: u64) -> Result<()> {
     
     let alice = [1; 32];
 
