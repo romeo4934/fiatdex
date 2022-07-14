@@ -1,6 +1,6 @@
 export { initMarket } from "./initMarket"
 export type { InitMarketArgs, InitMarketAccounts } from "./initMarket"
-export { newMakerOrder } from "./newMakerOrder"
-export type { NewMakerOrderArgs, NewMakerOrderAccounts } from "./newMakerOrder"
+export { newOrder } from "./newOrder"
+export type { NewOrderArgs, NewOrderAccounts } from "./newOrder"
 export { newTakerOrder } from "./newTakerOrder"
 export type { NewTakerOrderAccounts } from "./newTakerOrder"
