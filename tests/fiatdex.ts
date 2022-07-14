@@ -141,7 +141,7 @@ describe("fiatdex", () => {
   });
 
   it("create order", async () => {
-    let thisAskUser = await initUser(
+    let thisBidUser = await initUser(
       program,
       provider,
       wallet,
@@ -151,23 +151,51 @@ describe("fiatdex", () => {
       new anchor.BN(0),
     );
 
-    let tx = new anchor.web3.Transaction();
+    let tx1 = new anchor.web3.Transaction();
 
     //console.log("Display Test---->", { ...thisAskUser, ...market });
 
-    tx.add(
+    tx1.add(
       genInstr.newOrder(
         {
           side: new genTypes.Side.Bid(),
-          limitPrice: toFpLimitPrice(0.9, tickSizeNum),
+          limitPrice: toFpLimitPrice(15, tickSizeNum),
           maxBaseQty: new BN(1_000_000),
           isBroker: true,
+        },
+        { ...thisBidUser, ...market }
+      )
+    );
+
+    await provider.sendAndConfirm(tx1, [thisBidUser.userKeypair], { skipPreflight: true });
+
+    let thisAskUser = await initUser(
+      program,
+      provider,
+      wallet,
+      market,
+      new genTypes.Side.Ask(),
+      new anchor.BN(1_000),
+      new anchor.BN(0),
+    );
+
+    let tx2 = new anchor.web3.Transaction();
+
+    //console.log("Display Test---->", { ...thisAskUser, ...market });
+
+    tx2.add(
+      genInstr.newOrder(
+        {
+          side: new genTypes.Side.Ask(),
+          limitPrice: toFpLimitPrice(10, tickSizeNum),
+          maxBaseQty: new BN(1_000),
+          isBroker: false,
         },
         { ...thisAskUser, ...market }
       )
     );
 
-    await provider.sendAndConfirm(tx, [thisAskUser.userKeypair], { skipPreflight: true });
+    await provider.sendAndConfirm(tx2, [thisAskUser.userKeypair], { skipPreflight: true });
 
     /*
         await program.rpc.consumeOrderEvents(new anchor.BN(10), {

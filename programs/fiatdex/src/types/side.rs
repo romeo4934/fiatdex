@@ -27,16 +27,3 @@ impl Default for Side {
         Side::Bid
     }
 }
-
-impl fmt::Display for Side {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Side::Bid => {
-                write!(f, "Side::Bid")
-            }
-            Side::Ask => {
-                write!(f, "Side::Ask")
-            }
-        }
-    }
-}

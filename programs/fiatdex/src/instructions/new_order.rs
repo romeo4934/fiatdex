@@ -13,6 +13,13 @@ use agnostic_orderbook::state::market_state::MarketState;
 
 use anchor_lang::solana_program::program_error::PrintProgramError;
 
+use agnostic_orderbook::{
+    state::{
+        event_queue::{EventQueue, EventQueueHeader, EventRef, FillEvent, FillEventRef, OutEvent, OutEventRef},
+        AccountTag, Side as AobSide,
+    },
+};
+
 
 #[derive(Accounts)]
 pub struct NewOrder<'info> {
@@ -102,14 +109,14 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         (post_only, post_allowed)=(false, false);
     }
 
-    msg!("is Broker?: {}, Side: {}, max base qty: {}, limit price in FP32: {}",is_broker,  side, max_base_qty, limit_price);
+    msg!("is Broker?: {:?}, Side: {:?}, max base qty: {:?}, limit price in FP32: {:?}",is_broker,  side, max_base_qty, limit_price);
 
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
         max_base_qty: max_base_qty,
         max_quote_qty: u64::MAX,
         limit_price: limit_price,
-        side: agnostic_orderbook::state::Side::from(side),
-        match_limit: 1,
+        side: AobSide::from(side),
+        match_limit: 2,
         callback_info: user,
         post_only: post_only,
         post_allowed: post_allowed,
@@ -132,6 +139,17 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         msg!("Error: {:?}", error_display) ;
         return Err(error!(CustomErrors::InvalidOrder))
     }
+
+    // Lets try!
+
+    let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
+
+    let event_queue =
+        EventQueue::<[u8; 32]>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
+
+    let event =    event_queue.iter().next();
+    
+    msg!("EVENT {:?}", event);
 
     // Verify how much tokens we should wire in the pending trading zone
 
