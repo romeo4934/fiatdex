@@ -105,7 +105,7 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
     msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
 
    
-    if let Err(custom2) =
+    if let Err(error) =
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
             market: &ctx.accounts.orderbook,
             asks: &ctx.accounts.asks,
@@ -114,10 +114,9 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
         }, invoke_params,
     ) {
         
-        let error_display = custom2.print::<AoError>();
+        let error_display = error.print::<AoError>();
         msg!("Error: {:?}", error_display) ;
         return Err(error!(CustomErrors::InvalidOrder))
     }
     Ok(())
 }
-*/
