@@ -2,5 +2,8 @@ export { initMarket } from "./initMarket"
 export type { InitMarketArgs, InitMarketAccounts } from "./initMarket"
 export { newOrder } from "./newOrder"
 export type { NewOrderArgs, NewOrderAccounts } from "./newOrder"
-export { newTakerOrder } from "./newTakerOrder"
-export type { NewTakerOrderAccounts } from "./newTakerOrder"
+export { consumeOrderEvents } from "./consumeOrderEvents"
+export type {
+  ConsumeOrderEventsArgs,
+  ConsumeOrderEventsAccounts,
+} from "./consumeOrderEvents"
