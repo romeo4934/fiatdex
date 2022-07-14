@@ -88,8 +88,6 @@ pub fn new_maker_order(ctx: Context<NewMakerOrder>, limit_price: u64, max_base_q
     
     let alice = [1; 32];
 
-    //let aob_accounts = ;
-
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
         max_base_qty: max_base_qty,
         max_quote_qty: u64::MAX,
