@@ -84,19 +84,6 @@ fn consume_event(
             msg!("OUT!");
         }
     };
-
-    /*
-    // Lets try!
-
-    let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
-
-    let event_queue =
-        EventQueue::<[u8; 32]>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
-
-    let events_len =    event_queue.len();
     
-    msg!("EVENT {:?}", events_len);
-    */
-
     Ok(())
 }
