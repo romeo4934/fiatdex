@@ -100,6 +100,25 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
     let post_only;
     let post_allowed;
 
+    /*
+
+    match side {
+        Side::Ask => {
+            if qty > user_account.base_free {
+                return Err(ProgramError::InvalidInstructionData);
+            }
+        }
+        Side::Bid => {
+            let max_borrow_qty =
+                get_max_borrow_qty(&user_account, &market, &ctx.accounts.price_oracle);
+            msg!("Max borrow amount is {}", max_borrow_qty);
+            if qty > max_borrow_qty {
+                return Err(ProgramError::InsufficientFunds);
+            }
+        }
+    };
+    */
+
     // Broker should be only a maker and other users should be always a taker
     if is_broker {
         user = [1; 32];

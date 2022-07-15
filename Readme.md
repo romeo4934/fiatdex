@@ -2,5 +2,6 @@
 
 Remaining
 - fix callbacks
-- open order?
+- open order
+- connect to the smart contract of Kirill
 
