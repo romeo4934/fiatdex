@@ -141,6 +141,9 @@ describe("fiatdex", () => {
   });
 
   it("creates a new bid order", async () => {
+    console.log("Create deposit for users 1 and users 2");
+  });
+  it("creates a new bid order", async () => {
     let thisBidUser = await initUser(
       program,
       provider,
