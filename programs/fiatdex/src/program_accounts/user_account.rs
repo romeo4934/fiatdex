@@ -8,8 +8,6 @@ pub const USER_OPEN_ORDERS_SIZE: usize = 16;
 pub struct UserAccount {
     pub owner: Pubkey,
     pub market: Pubkey,
-    pub base_token_free: u64,
-    pub base_token_locked: u64,
     pub quote_token_free: u64,
     pub quote_token_locked: u64,
     // Active orders
