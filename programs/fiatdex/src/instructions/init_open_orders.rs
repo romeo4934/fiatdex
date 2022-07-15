@@ -28,12 +28,7 @@ pub struct InitOpenOrders<'info> {
         init,
         seeds = [user.key().as_ref(), OPEN_ORDERS.as_bytes(), &market.market_id, market.authority.as_ref()],
         bump,
-        space = {
-            let mut this_space: usize = 172;
-            this_space = this_space.checked_add(16_usize.checked_mul(10 as usize).unwrap()).unwrap();
-            msg!("space for this open orders {}", this_space);
-            this_space
-        },
+        space = 332, // better compute the space probably we can reduce a little bit
         payer = user,
     )]
     pub open_orders: Box<Account<'info, OpenOrders>>,
