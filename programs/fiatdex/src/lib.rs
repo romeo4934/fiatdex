@@ -30,4 +30,8 @@ pub mod fiatdex {
     pub fn consume_order_events(ctx: Context<ConsumeOrderEvents>, max_iterations: u64,) -> Result<()> {
         instructions::consume_order_events(ctx, max_iterations)
     }
+
+    pub fn init_open_orders(ctx: Context<InitOpenOrders>) -> Result<()> {
+        instructions::init_open_orders(ctx)
+    }
 }

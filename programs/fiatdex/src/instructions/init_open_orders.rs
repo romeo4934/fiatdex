@@ -16,7 +16,6 @@ use agnostic_orderbook::state::critbit::Slab;
 
 
 #[derive(Accounts)]
-#[instruction(max_orders: u8)]
 pub struct InitOpenOrders<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
@@ -31,7 +30,7 @@ pub struct InitOpenOrders<'info> {
         bump,
         space = {
             let mut this_space: usize = 172;
-            this_space = this_space.checked_add(16_usize.checked_mul(max_orders as usize).unwrap()).unwrap();
+            this_space = this_space.checked_add(16_usize.checked_mul(10 as usize).unwrap()).unwrap();
             msg!("space for this open orders {}", this_space);
             this_space
         },
@@ -41,10 +40,21 @@ pub struct InitOpenOrders<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn init_open_orders(ctx: Context<InitOpenOrders>, market_id: [u8; 10]) -> Result<()> {
-    
+pub fn init_open_orders(ctx: Context<InitOpenOrders>) -> Result<()> {
+    ctx.accounts.open_orders.set_inner(OpenOrders {
+        bump: *ctx.bumps.get("open_orders").unwrap(),
+        authority: ctx.accounts.user.key(),
+        market: ctx.accounts.market.key(),
+        
+        // Everything else defaults to 0
+        
+        quote_token_locked: 0,
+        quote_token_free: 0,
+        
+        number_of_orders: 0,
+        orders: Vec::new(),
+    });
     
     Ok(())
-
 
 }
