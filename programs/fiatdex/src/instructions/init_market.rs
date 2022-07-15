@@ -96,23 +96,6 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         base_vault: ctx.accounts.base_vault.key(),
         min_base_order_size: min_base_order_size,
         tick_size: tick_size,
-        // Everything else defaults to 0
-        current_bid_key: 0,
-        current_ask_key: 0,
-        current_bid_quantity_filled: 0,
-        current_ask_quantity_filled: 0,
-        total_quantity_filled_so_far: 0,
-        has_found_clearing_price: false,
-        total_quantity_matched: 0,
-        remaining_bid_fills: 0,
-        remaining_ask_fills: 0,
-        final_bid_price: 0,
-        final_ask_price: 0,
-        clearing_price: 0,
-        ask_search_stack_depth: 0,
-        ask_search_stack_values: [0; 32],
-        bid_search_stack_depth: 0,
-        bid_search_stack_values: [0; 32],
     });
 
     let invoke_params = agnostic_orderbook::instruction::create_market::Params {
