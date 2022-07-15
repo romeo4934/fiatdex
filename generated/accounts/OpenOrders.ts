@@ -5,7 +5,8 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface OpenOrdersFields {
-  owner: PublicKey
+  bump: number
+  authority: PublicKey
   market: PublicKey
   quoteTokenFree: BN
   quoteTokenLocked: BN
@@ -14,7 +15,8 @@ export interface OpenOrdersFields {
 }
 
 export interface OpenOrdersJSON {
-  owner: string
+  bump: number
+  authority: string
   market: string
   quoteTokenFree: string
   quoteTokenLocked: string
@@ -23,7 +25,8 @@ export interface OpenOrdersJSON {
 }
 
 export class OpenOrders {
-  readonly owner: PublicKey
+  readonly bump: number
+  readonly authority: PublicKey
   readonly market: PublicKey
   readonly quoteTokenFree: BN
   readonly quoteTokenLocked: BN
@@ -35,7 +38,8 @@ export class OpenOrders {
   ])
 
   static readonly layout = borsh.struct([
-    borsh.publicKey("owner"),
+    borsh.u8("bump"),
+    borsh.publicKey("authority"),
     borsh.publicKey("market"),
     borsh.u64("quoteTokenFree"),
     borsh.u64("quoteTokenLocked"),
@@ -44,7 +48,8 @@ export class OpenOrders {
   ])
 
   constructor(fields: OpenOrdersFields) {
-    this.owner = fields.owner
+    this.bump = fields.bump
+    this.authority = fields.authority
     this.market = fields.market
     this.quoteTokenFree = fields.quoteTokenFree
     this.quoteTokenLocked = fields.quoteTokenLocked
@@ -94,7 +99,8 @@ export class OpenOrders {
     const dec = OpenOrders.layout.decode(data.slice(8))
 
     return new OpenOrders({
-      owner: dec.owner,
+      bump: dec.bump,
+      authority: dec.authority,
       market: dec.market,
       quoteTokenFree: dec.quoteTokenFree,
       quoteTokenLocked: dec.quoteTokenLocked,
@@ -105,7 +111,8 @@ export class OpenOrders {
 
   toJSON(): OpenOrdersJSON {
     return {
-      owner: this.owner.toString(),
+      bump: this.bump,
+      authority: this.authority.toString(),
       market: this.market.toString(),
       quoteTokenFree: this.quoteTokenFree.toString(),
       quoteTokenLocked: this.quoteTokenLocked.toString(),
@@ -116,7 +123,8 @@ export class OpenOrders {
 
   static fromJSON(obj: OpenOrdersJSON): OpenOrders {
     return new OpenOrders({
-      owner: new PublicKey(obj.owner),
+      bump: obj.bump,
+      authority: new PublicKey(obj.authority),
       market: new PublicKey(obj.market),
       quoteTokenFree: new BN(obj.quoteTokenFree),
       quoteTokenLocked: new BN(obj.quoteTokenLocked),
