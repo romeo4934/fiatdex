@@ -14,7 +14,6 @@ export interface User {
   userKeypair?: Keypair,
   user: PublicKey,
   openOrders: PublicKey,
-  orderHistory: PublicKey,
   userBase: PublicKey,
   userQuote: PublicKey,
   side: genTypes.SideKind,
@@ -60,15 +59,10 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
     [user.toBuffer(), Buffer.from("open_orders"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
     program.programId
   );
-  let [orderHistory] = await anchor.web3.PublicKey.findProgramAddress(
-    [user.toBuffer(), Buffer.from("order_history"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
-    program.programId
-  );
   return {
     userKeypair,
     user,
     openOrders,
-    orderHistory,
     userBase,
     userQuote,
     side,

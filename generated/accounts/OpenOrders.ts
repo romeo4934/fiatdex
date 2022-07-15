@@ -5,44 +5,29 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import { PROGRAM_ID } from "../programId"
 
 export interface OpenOrdersFields {
-  bump: number
-  authority: PublicKey
-  isBidsAccount: boolean
-  publicKey: Uint8Array
-  encryptedOrders: Array<types.EncryptedOrderFields>
-  quoteTokenLocked: BN
+  owner: PublicKey
+  market: PublicKey
   quoteTokenFree: BN
-  baseTokenLocked: BN
-  baseTokenFree: BN
-  numOrders: number
+  quoteTokenLocked: BN
+  numberOfOrders: number
   orders: Array<BN>
 }
 
 export interface OpenOrdersJSON {
-  bump: number
-  authority: string
-  isBidsAccount: boolean
-  publicKey: Array<number>
-  encryptedOrders: Array<types.EncryptedOrderJSON>
-  quoteTokenLocked: string
+  owner: string
+  market: string
   quoteTokenFree: string
-  baseTokenLocked: string
-  baseTokenFree: string
-  numOrders: number
+  quoteTokenLocked: string
+  numberOfOrders: number
   orders: Array<string>
 }
 
 export class OpenOrders {
-  readonly bump: number
-  readonly authority: PublicKey
-  readonly isBidsAccount: boolean
-  readonly publicKey: Uint8Array
-  readonly encryptedOrders: Array<types.EncryptedOrder>
-  readonly quoteTokenLocked: BN
+  readonly owner: PublicKey
+  readonly market: PublicKey
   readonly quoteTokenFree: BN
-  readonly baseTokenLocked: BN
-  readonly baseTokenFree: BN
-  readonly numOrders: number
+  readonly quoteTokenLocked: BN
+  readonly numberOfOrders: number
   readonly orders: Array<BN>
 
   static readonly discriminator = Buffer.from([
@@ -50,32 +35,20 @@ export class OpenOrders {
   ])
 
   static readonly layout = borsh.struct([
-    borsh.u8("bump"),
-    borsh.publicKey("authority"),
-    borsh.bool("isBidsAccount"),
-    borsh.vecU8("publicKey"),
-    borsh.vec(types.EncryptedOrder.layout(), "encryptedOrders"),
-    borsh.u64("quoteTokenLocked"),
+    borsh.publicKey("owner"),
+    borsh.publicKey("market"),
     borsh.u64("quoteTokenFree"),
-    borsh.u64("baseTokenLocked"),
-    borsh.u64("baseTokenFree"),
-    borsh.u8("numOrders"),
+    borsh.u64("quoteTokenLocked"),
+    borsh.u8("numberOfOrders"),
     borsh.vec(borsh.u128(), "orders"),
   ])
 
   constructor(fields: OpenOrdersFields) {
-    this.bump = fields.bump
-    this.authority = fields.authority
-    this.isBidsAccount = fields.isBidsAccount
-    this.publicKey = fields.publicKey
-    this.encryptedOrders = fields.encryptedOrders.map(
-      (item) => new types.EncryptedOrder({ ...item })
-    )
-    this.quoteTokenLocked = fields.quoteTokenLocked
+    this.owner = fields.owner
+    this.market = fields.market
     this.quoteTokenFree = fields.quoteTokenFree
-    this.baseTokenLocked = fields.baseTokenLocked
-    this.baseTokenFree = fields.baseTokenFree
-    this.numOrders = fields.numOrders
+    this.quoteTokenLocked = fields.quoteTokenLocked
+    this.numberOfOrders = fields.numberOfOrders
     this.orders = fields.orders
   }
 
@@ -121,58 +94,33 @@ export class OpenOrders {
     const dec = OpenOrders.layout.decode(data.slice(8))
 
     return new OpenOrders({
-      bump: dec.bump,
-      authority: dec.authority,
-      isBidsAccount: dec.isBidsAccount,
-      publicKey: new Uint8Array(
-        dec.publicKey.buffer,
-        dec.publicKey.byteOffset,
-        dec.publicKey.length
-      ),
-      encryptedOrders: dec.encryptedOrders.map(
-        (
-          item: any /* eslint-disable-line @typescript-eslint/no-explicit-any */
-        ) => types.EncryptedOrder.fromDecoded(item)
-      ),
-      quoteTokenLocked: dec.quoteTokenLocked,
+      owner: dec.owner,
+      market: dec.market,
       quoteTokenFree: dec.quoteTokenFree,
-      baseTokenLocked: dec.baseTokenLocked,
-      baseTokenFree: dec.baseTokenFree,
-      numOrders: dec.numOrders,
+      quoteTokenLocked: dec.quoteTokenLocked,
+      numberOfOrders: dec.numberOfOrders,
       orders: dec.orders,
     })
   }
 
   toJSON(): OpenOrdersJSON {
     return {
-      bump: this.bump,
-      authority: this.authority.toString(),
-      isBidsAccount: this.isBidsAccount,
-      publicKey: Array.from(this.publicKey.values()),
-      encryptedOrders: this.encryptedOrders.map((item) => item.toJSON()),
-      quoteTokenLocked: this.quoteTokenLocked.toString(),
+      owner: this.owner.toString(),
+      market: this.market.toString(),
       quoteTokenFree: this.quoteTokenFree.toString(),
-      baseTokenLocked: this.baseTokenLocked.toString(),
-      baseTokenFree: this.baseTokenFree.toString(),
-      numOrders: this.numOrders,
+      quoteTokenLocked: this.quoteTokenLocked.toString(),
+      numberOfOrders: this.numberOfOrders,
       orders: this.orders.map((item) => item.toString()),
     }
   }
 
   static fromJSON(obj: OpenOrdersJSON): OpenOrders {
     return new OpenOrders({
-      bump: obj.bump,
-      authority: new PublicKey(obj.authority),
-      isBidsAccount: obj.isBidsAccount,
-      publicKey: Uint8Array.from(obj.publicKey),
-      encryptedOrders: obj.encryptedOrders.map((item) =>
-        types.EncryptedOrder.fromJSON(item)
-      ),
-      quoteTokenLocked: new BN(obj.quoteTokenLocked),
+      owner: new PublicKey(obj.owner),
+      market: new PublicKey(obj.market),
       quoteTokenFree: new BN(obj.quoteTokenFree),
-      baseTokenLocked: new BN(obj.baseTokenLocked),
-      baseTokenFree: new BN(obj.baseTokenFree),
-      numOrders: obj.numOrders,
+      quoteTokenLocked: new BN(obj.quoteTokenLocked),
+      numberOfOrders: obj.numberOfOrders,
       orders: obj.orders.map((item) => new BN(item)),
     })
   }

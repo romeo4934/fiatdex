@@ -19,22 +19,6 @@ export interface MarketFields {
   baseVault: PublicKey
   minBaseOrderSize: BN
   tickSize: BN
-  askSearchStackDepth: number
-  bidSearchStackDepth: number
-  askSearchStackValues: Array<number>
-  bidSearchStackValues: Array<number>
-  currentBidKey: BN
-  currentAskKey: BN
-  currentBidQuantityFilled: BN
-  currentAskQuantityFilled: BN
-  totalQuantityFilledSoFar: BN
-  hasFoundClearingPrice: boolean
-  totalQuantityMatched: BN
-  remainingAskFills: BN
-  remainingBidFills: BN
-  finalBidPrice: BN
-  finalAskPrice: BN
-  clearingPrice: BN
 }
 
 export interface MarketJSON {
@@ -52,22 +36,6 @@ export interface MarketJSON {
   baseVault: string
   minBaseOrderSize: string
   tickSize: string
-  askSearchStackDepth: number
-  bidSearchStackDepth: number
-  askSearchStackValues: Array<number>
-  bidSearchStackValues: Array<number>
-  currentBidKey: string
-  currentAskKey: string
-  currentBidQuantityFilled: string
-  currentAskQuantityFilled: string
-  totalQuantityFilledSoFar: string
-  hasFoundClearingPrice: boolean
-  totalQuantityMatched: string
-  remainingAskFills: string
-  remainingBidFills: string
-  finalBidPrice: string
-  finalAskPrice: string
-  clearingPrice: string
 }
 
 export class Market {
@@ -85,22 +53,6 @@ export class Market {
   readonly baseVault: PublicKey
   readonly minBaseOrderSize: BN
   readonly tickSize: BN
-  readonly askSearchStackDepth: number
-  readonly bidSearchStackDepth: number
-  readonly askSearchStackValues: Array<number>
-  readonly bidSearchStackValues: Array<number>
-  readonly currentBidKey: BN
-  readonly currentAskKey: BN
-  readonly currentBidQuantityFilled: BN
-  readonly currentAskQuantityFilled: BN
-  readonly totalQuantityFilledSoFar: BN
-  readonly hasFoundClearingPrice: boolean
-  readonly totalQuantityMatched: BN
-  readonly remainingAskFills: BN
-  readonly remainingBidFills: BN
-  readonly finalBidPrice: BN
-  readonly finalAskPrice: BN
-  readonly clearingPrice: BN
 
   static readonly discriminator = Buffer.from([
     219, 190, 213, 55, 0, 227, 198, 154,
@@ -121,22 +73,6 @@ export class Market {
     borsh.publicKey("baseVault"),
     borsh.u64("minBaseOrderSize"),
     borsh.u64("tickSize"),
-    borsh.u8("askSearchStackDepth"),
-    borsh.u8("bidSearchStackDepth"),
-    borsh.array(borsh.u32(), 32, "askSearchStackValues"),
-    borsh.array(borsh.u32(), 32, "bidSearchStackValues"),
-    borsh.u128("currentBidKey"),
-    borsh.u128("currentAskKey"),
-    borsh.u64("currentBidQuantityFilled"),
-    borsh.u64("currentAskQuantityFilled"),
-    borsh.u64("totalQuantityFilledSoFar"),
-    borsh.bool("hasFoundClearingPrice"),
-    borsh.u64("totalQuantityMatched"),
-    borsh.u64("remainingAskFills"),
-    borsh.u64("remainingBidFills"),
-    borsh.u64("finalBidPrice"),
-    borsh.u64("finalAskPrice"),
-    borsh.u64("clearingPrice"),
   ])
 
   constructor(fields: MarketFields) {
@@ -154,22 +90,6 @@ export class Market {
     this.baseVault = fields.baseVault
     this.minBaseOrderSize = fields.minBaseOrderSize
     this.tickSize = fields.tickSize
-    this.askSearchStackDepth = fields.askSearchStackDepth
-    this.bidSearchStackDepth = fields.bidSearchStackDepth
-    this.askSearchStackValues = fields.askSearchStackValues
-    this.bidSearchStackValues = fields.bidSearchStackValues
-    this.currentBidKey = fields.currentBidKey
-    this.currentAskKey = fields.currentAskKey
-    this.currentBidQuantityFilled = fields.currentBidQuantityFilled
-    this.currentAskQuantityFilled = fields.currentAskQuantityFilled
-    this.totalQuantityFilledSoFar = fields.totalQuantityFilledSoFar
-    this.hasFoundClearingPrice = fields.hasFoundClearingPrice
-    this.totalQuantityMatched = fields.totalQuantityMatched
-    this.remainingAskFills = fields.remainingAskFills
-    this.remainingBidFills = fields.remainingBidFills
-    this.finalBidPrice = fields.finalBidPrice
-    this.finalAskPrice = fields.finalAskPrice
-    this.clearingPrice = fields.clearingPrice
   }
 
   static async fetch(
@@ -228,22 +148,6 @@ export class Market {
       baseVault: dec.baseVault,
       minBaseOrderSize: dec.minBaseOrderSize,
       tickSize: dec.tickSize,
-      askSearchStackDepth: dec.askSearchStackDepth,
-      bidSearchStackDepth: dec.bidSearchStackDepth,
-      askSearchStackValues: dec.askSearchStackValues,
-      bidSearchStackValues: dec.bidSearchStackValues,
-      currentBidKey: dec.currentBidKey,
-      currentAskKey: dec.currentAskKey,
-      currentBidQuantityFilled: dec.currentBidQuantityFilled,
-      currentAskQuantityFilled: dec.currentAskQuantityFilled,
-      totalQuantityFilledSoFar: dec.totalQuantityFilledSoFar,
-      hasFoundClearingPrice: dec.hasFoundClearingPrice,
-      totalQuantityMatched: dec.totalQuantityMatched,
-      remainingAskFills: dec.remainingAskFills,
-      remainingBidFills: dec.remainingBidFills,
-      finalBidPrice: dec.finalBidPrice,
-      finalAskPrice: dec.finalAskPrice,
-      clearingPrice: dec.clearingPrice,
     })
   }
 
@@ -263,22 +167,6 @@ export class Market {
       baseVault: this.baseVault.toString(),
       minBaseOrderSize: this.minBaseOrderSize.toString(),
       tickSize: this.tickSize.toString(),
-      askSearchStackDepth: this.askSearchStackDepth,
-      bidSearchStackDepth: this.bidSearchStackDepth,
-      askSearchStackValues: this.askSearchStackValues,
-      bidSearchStackValues: this.bidSearchStackValues,
-      currentBidKey: this.currentBidKey.toString(),
-      currentAskKey: this.currentAskKey.toString(),
-      currentBidQuantityFilled: this.currentBidQuantityFilled.toString(),
-      currentAskQuantityFilled: this.currentAskQuantityFilled.toString(),
-      totalQuantityFilledSoFar: this.totalQuantityFilledSoFar.toString(),
-      hasFoundClearingPrice: this.hasFoundClearingPrice,
-      totalQuantityMatched: this.totalQuantityMatched.toString(),
-      remainingAskFills: this.remainingAskFills.toString(),
-      remainingBidFills: this.remainingBidFills.toString(),
-      finalBidPrice: this.finalBidPrice.toString(),
-      finalAskPrice: this.finalAskPrice.toString(),
-      clearingPrice: this.clearingPrice.toString(),
     }
   }
 
@@ -298,22 +186,6 @@ export class Market {
       baseVault: new PublicKey(obj.baseVault),
       minBaseOrderSize: new BN(obj.minBaseOrderSize),
       tickSize: new BN(obj.tickSize),
-      askSearchStackDepth: obj.askSearchStackDepth,
-      bidSearchStackDepth: obj.bidSearchStackDepth,
-      askSearchStackValues: obj.askSearchStackValues,
-      bidSearchStackValues: obj.bidSearchStackValues,
-      currentBidKey: new BN(obj.currentBidKey),
-      currentAskKey: new BN(obj.currentAskKey),
-      currentBidQuantityFilled: new BN(obj.currentBidQuantityFilled),
-      currentAskQuantityFilled: new BN(obj.currentAskQuantityFilled),
-      totalQuantityFilledSoFar: new BN(obj.totalQuantityFilledSoFar),
-      hasFoundClearingPrice: obj.hasFoundClearingPrice,
-      totalQuantityMatched: new BN(obj.totalQuantityMatched),
-      remainingAskFills: new BN(obj.remainingAskFills),
-      remainingBidFills: new BN(obj.remainingBidFills),
-      finalBidPrice: new BN(obj.finalBidPrice),
-      finalAskPrice: new BN(obj.finalAskPrice),
-      clearingPrice: new BN(obj.clearingPrice),
     })
   }
 }
