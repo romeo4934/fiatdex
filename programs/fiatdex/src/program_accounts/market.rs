@@ -16,9 +16,7 @@ pub struct Market {
     pub bids: Pubkey,
     pub asks: Pubkey,
     pub quote_mint: Pubkey,
-    pub base_mint: Pubkey,
     pub quote_vault: Pubkey,
-    pub base_vault: Pubkey,
     pub min_base_order_size: u64,
     pub tick_size: u64,
 }

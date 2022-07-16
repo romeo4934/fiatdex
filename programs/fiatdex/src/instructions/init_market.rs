@@ -49,7 +49,6 @@ pub struct InitMarket<'info> {
     pub asks: UncheckedAccount<'info>,
     // Token vaults
     pub quote_mint: Account<'info, Mint>,
-    pub base_mint: Account<'info, Mint>,
     #[account(
         init,
         token::mint = quote_mint,
@@ -59,15 +58,6 @@ pub struct InitMarket<'info> {
         payer = marketer,
     )]
     pub quote_vault: Account<'info, TokenAccount>,
-    #[account(
-        init,
-        token::mint = base_mint,
-        token::authority = market, // It should probably be the market account, since it will sign
-        seeds = [BASE_VAULT.as_bytes(), &market_id, marketer.key().as_ref()],
-        bump,
-        payer = marketer,
-    )]
-    pub base_vault: Account<'info, TokenAccount>,
     // Sysvars
     pub rent: Sysvar<'info, Rent>,
     // Programs
@@ -81,7 +71,6 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         bump: *ctx.bumps.get("market").unwrap(),
         bumps: AobBumps {
             quote_vault: *ctx.bumps.get("quote_vault").unwrap(),
-            base_vault: *ctx.bumps.get("base_vault").unwrap(),
         },
         authority: ctx.accounts.marketer.key(),
         market_id: market_id,
@@ -92,9 +81,7 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         bids: ctx.accounts.bids.key(),
         asks: ctx.accounts.asks.key(),
         quote_mint: ctx.accounts.quote_mint.key(),
-        base_mint: ctx.accounts.base_mint.key(),
         quote_vault: ctx.accounts.quote_vault.key(),
-        base_vault: ctx.accounts.base_vault.key(),
         min_base_order_size: min_base_order_size,
         tick_size: tick_size,
     });

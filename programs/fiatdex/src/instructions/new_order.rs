@@ -68,8 +68,6 @@ pub struct NewOrder<'info> {
     // Token accounts
     #[account(address = market.quote_mint)]
     pub quote_mint: Box<Account<'info, Mint>>,
-    #[account(address = market.base_mint)]
-    pub base_mint: Box<Account<'info, Mint>>,
     #[account(
         associated_token::mint = quote_mint,
         associated_token::authority = user,
@@ -77,23 +75,11 @@ pub struct NewOrder<'info> {
     )]
     pub user_quote: Account<'info, TokenAccount>,
     #[account(
-        associated_token::mint = base_mint,
-        associated_token::authority = user,
-        mut
-    )]
-    pub user_base: Account<'info, TokenAccount>,
-    #[account(
         seeds = [QUOTE_VAULT.as_bytes(), &market.market_id, market.authority.as_ref()],
         bump = market.bumps.quote_vault,
         mut
     )]
     pub quote_vault: Account<'info, TokenAccount>,
-    #[account(
-        seeds = [BASE_VAULT.as_bytes(), &market.market_id, market.authority.as_ref()],
-        bump = market.bumps.base_vault,
-        mut
-    )]
-    pub base_vault: Account<'info, TokenAccount>,
     // Programs
     pub token_program: Program<'info, Token>,
 }
