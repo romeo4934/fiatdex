@@ -14,6 +14,7 @@ export interface NewOrderArgs {
 export interface NewOrderAccounts {
   user: PublicKey
   market: PublicKey
+  userAccount: PublicKey
   eventQueue: PublicKey
   bids: PublicKey
   asks: PublicKey
@@ -38,6 +39,7 @@ export function newOrder(args: NewOrderArgs, accounts: NewOrderAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.user, isSigner: true, isWritable: false },
     { pubkey: accounts.market, isSigner: false, isWritable: false },
+    { pubkey: accounts.userAccount, isSigner: false, isWritable: true },
     { pubkey: accounts.eventQueue, isSigner: false, isWritable: true },
     { pubkey: accounts.bids, isSigner: false, isWritable: true },
     { pubkey: accounts.asks, isSigner: false, isWritable: true },

@@ -30,6 +30,12 @@ pub struct NewOrder<'info> {
         bump = market.bump,
     )]
     pub market: Box<Account<'info, Market>>,
+    #[account(
+        seeds = [user.key().as_ref(), USER_ACCOUNT.as_bytes(), &market.market_id, market.authority.as_ref()],
+        bump = user_account.bump,
+        mut
+    )]
+    pub user_account: Box<Account<'info, UserAccount>>,
     // AOB Accounts
     /// CHECK: This should be owned by the program
     #[account(
