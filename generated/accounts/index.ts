@@ -1,4 +1,4 @@
 export { Market } from "./Market"
 export type { MarketFields, MarketJSON } from "./Market"
-export { OpenOrders } from "./OpenOrders"
-export type { OpenOrdersFields, OpenOrdersJSON } from "./OpenOrders"
+export { UserAccount } from "./UserAccount"
+export type { UserAccountFields, UserAccountJSON } from "./UserAccount"

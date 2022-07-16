@@ -4,21 +4,21 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface InitOpenOrdersAccounts {
+export interface InitUserAccountAccounts {
   user: PublicKey
   market: PublicKey
-  openOrders: PublicKey
+  userAccount: PublicKey
   systemProgram: PublicKey
 }
 
-export function initOpenOrders(accounts: InitOpenOrdersAccounts) {
+export function initUserAccount(accounts: InitUserAccountAccounts) {
   const keys: Array<AccountMeta> = [
     { pubkey: accounts.user, isSigner: true, isWritable: true },
     { pubkey: accounts.market, isSigner: false, isWritable: false },
-    { pubkey: accounts.openOrders, isSigner: false, isWritable: true },
+    { pubkey: accounts.userAccount, isSigner: false, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
   ]
-  const identifier = Buffer.from([230, 167, 76, 177, 168, 44, 155, 13])
+  const identifier = Buffer.from([4, 156, 208, 52, 55, 223, 165, 136])
   const data = identifier
   const ix = new TransactionInstruction({ keys, programId: PROGRAM_ID, data })
   return ix

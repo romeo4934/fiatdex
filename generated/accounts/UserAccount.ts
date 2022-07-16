@@ -4,7 +4,7 @@ import * as borsh from "@project-serum/borsh" // eslint-disable-line @typescript
 import * as types from "../types" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { PROGRAM_ID } from "../programId"
 
-export interface OpenOrdersFields {
+export interface UserAccountFields {
   bump: number
   authority: PublicKey
   market: PublicKey
@@ -14,7 +14,7 @@ export interface OpenOrdersFields {
   orders: Array<BN>
 }
 
-export interface OpenOrdersJSON {
+export interface UserAccountJSON {
   bump: number
   authority: string
   market: string
@@ -24,7 +24,7 @@ export interface OpenOrdersJSON {
   orders: Array<string>
 }
 
-export class OpenOrders {
+export class UserAccount {
   readonly bump: number
   readonly authority: PublicKey
   readonly market: PublicKey
@@ -34,7 +34,7 @@ export class OpenOrders {
   readonly orders: Array<BN>
 
   static readonly discriminator = Buffer.from([
-    139, 166, 123, 206, 111, 2, 116, 33,
+    211, 33, 136, 16, 186, 110, 242, 127,
   ])
 
   static readonly layout = borsh.struct([
@@ -47,7 +47,7 @@ export class OpenOrders {
     borsh.vec(borsh.u128(), "orders"),
   ])
 
-  constructor(fields: OpenOrdersFields) {
+  constructor(fields: UserAccountFields) {
     this.bump = fields.bump
     this.authority = fields.authority
     this.market = fields.market
@@ -60,7 +60,7 @@ export class OpenOrders {
   static async fetch(
     c: Connection,
     address: PublicKey
-  ): Promise<OpenOrders | null> {
+  ): Promise<UserAccount | null> {
     const info = await c.getAccountInfo(address)
 
     if (info === null) {
@@ -76,7 +76,7 @@ export class OpenOrders {
   static async fetchMultiple(
     c: Connection,
     addresses: PublicKey[]
-  ): Promise<Array<OpenOrders | null>> {
+  ): Promise<Array<UserAccount | null>> {
     const infos = await c.getMultipleAccountsInfo(addresses)
 
     return infos.map((info) => {
@@ -91,14 +91,14 @@ export class OpenOrders {
     })
   }
 
-  static decode(data: Buffer): OpenOrders {
-    if (!data.slice(0, 8).equals(OpenOrders.discriminator)) {
+  static decode(data: Buffer): UserAccount {
+    if (!data.slice(0, 8).equals(UserAccount.discriminator)) {
       throw new Error("invalid account discriminator")
     }
 
-    const dec = OpenOrders.layout.decode(data.slice(8))
+    const dec = UserAccount.layout.decode(data.slice(8))
 
-    return new OpenOrders({
+    return new UserAccount({
       bump: dec.bump,
       authority: dec.authority,
       market: dec.market,
@@ -109,7 +109,7 @@ export class OpenOrders {
     })
   }
 
-  toJSON(): OpenOrdersJSON {
+  toJSON(): UserAccountJSON {
     return {
       bump: this.bump,
       authority: this.authority.toString(),
@@ -121,8 +121,8 @@ export class OpenOrders {
     }
   }
 
-  static fromJSON(obj: OpenOrdersJSON): OpenOrders {
-    return new OpenOrders({
+  static fromJSON(obj: UserAccountJSON): UserAccount {
+    return new UserAccount({
       bump: obj.bump,
       authority: new PublicKey(obj.authority),
       market: new PublicKey(obj.market),
