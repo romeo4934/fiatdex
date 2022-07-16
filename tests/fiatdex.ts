@@ -168,12 +168,12 @@ describe("fiatdex", () => {
     let tx = new anchor.web3.Transaction();
 
     tx.add(
-      genInstr.initOpenOrders(
+      genInstr.initUserAccount(
         { ...users[0], ...market }
       )
     );
     tx.add(
-      genInstr.initOpenOrders(
+      genInstr.initUserAccount(
         { ...users[1], ...market }
       )
     );

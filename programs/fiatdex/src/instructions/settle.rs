@@ -16,26 +16,11 @@ use agnostic_orderbook::state::critbit::Slab;
 
 
 #[derive(Accounts)]
-pub struct Withdraw<'info> {
-    #[account(mut)]
-    pub user: Signer<'info>,
-    #[account(
-        seeds = [MARKET.as_bytes(), &market.market_id, market.authority.as_ref()],
-        bump = market.bump,
-    )]
-    pub market: Box<Account<'info, Market>>,
-    #[account(
-        init,
-        seeds = [user.key().as_ref(), OPEN_ORDERS.as_bytes(), &market.market_id, market.authority.as_ref()],
-        bump,
-        space = 332, // better compute the space probably we can reduce a little bit
-        payer = user,
-    )]
-    pub open_orders: Box<Account<'info, OpenOrders>>,
-    pub system_program: Program<'info, System>,
+pub struct Settle<'info> {
+
 }
 
-pub fn widthdraw(ctx: Context<InitOpenOrders>) -> Result<()> {
+pub fn settle(ctx: Context<Settle>) -> Result<()> {
     
     Ok(())
 

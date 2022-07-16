@@ -56,7 +56,7 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
     );
   }
   let [openOrders] = await anchor.web3.PublicKey.findProgramAddress(
-    [user.toBuffer(), Buffer.from("open_orders"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
+    [user.toBuffer(), Buffer.from("user_account"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
     program.programId
   );
   return {

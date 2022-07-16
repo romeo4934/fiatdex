@@ -16,7 +16,7 @@ use agnostic_orderbook::state::critbit::Slab;
 
 
 #[derive(Accounts)]
-pub struct InitOpenOrders<'info> {
+pub struct InitUserAccount<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     #[account(
@@ -26,18 +26,18 @@ pub struct InitOpenOrders<'info> {
     pub market: Box<Account<'info, Market>>,
     #[account(
         init,
-        seeds = [user.key().as_ref(), OPEN_ORDERS.as_bytes(), &market.market_id, market.authority.as_ref()],
+        seeds = [user.key().as_ref(), USER_ACCOUNT.as_bytes(), &market.market_id, market.authority.as_ref()],
         bump,
         space = 332, // better compute the space probably we can reduce a little bit
         payer = user,
     )]
-    pub open_orders: Box<Account<'info, OpenOrders>>,
+    pub user_account: Box<Account<'info, UserAccount>>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn init_open_orders(ctx: Context<InitOpenOrders>) -> Result<()> {
-    ctx.accounts.open_orders.set_inner(OpenOrders {
-        bump: *ctx.bumps.get("open_orders").unwrap(),
+pub fn init_user_account(ctx: Context<InitUserAccount>) -> Result<()> {
+    ctx.accounts.user_account.set_inner(UserAccount {
+        bump: *ctx.bumps.get("user_account").unwrap(),
         authority: ctx.accounts.user.key(),
         market: ctx.accounts.market.key(),
         
