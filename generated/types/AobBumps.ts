@@ -5,56 +5,45 @@ import * as borsh from "@project-serum/borsh"
 
 export interface AobBumpsFields {
   quoteVault: number
-  baseVault: number
 }
 
 export interface AobBumpsJSON {
   quoteVault: number
-  baseVault: number
 }
 
 export class AobBumps {
   readonly quoteVault: number
-  readonly baseVault: number
 
   constructor(fields: AobBumpsFields) {
     this.quoteVault = fields.quoteVault
-    this.baseVault = fields.baseVault
   }
 
   static layout(property?: string) {
-    return borsh.struct(
-      [borsh.u8("quoteVault"), borsh.u8("baseVault")],
-      property
-    )
+    return borsh.struct([borsh.u8("quoteVault")], property)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromDecoded(obj: any) {
     return new AobBumps({
       quoteVault: obj.quoteVault,
-      baseVault: obj.baseVault,
     })
   }
 
   static toEncodable(fields: AobBumpsFields) {
     return {
       quoteVault: fields.quoteVault,
-      baseVault: fields.baseVault,
     }
   }
 
   toJSON(): AobBumpsJSON {
     return {
       quoteVault: this.quoteVault,
-      baseVault: this.baseVault,
     }
   }
 
   static fromJSON(obj: AobBumpsJSON): AobBumps {
     return new AobBumps({
       quoteVault: obj.quoteVault,
-      baseVault: obj.baseVault,
     })
   }
 

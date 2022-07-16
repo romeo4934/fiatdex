@@ -18,9 +18,7 @@ export interface InitMarketAccounts {
   bids: PublicKey
   asks: PublicKey
   quoteMint: PublicKey
-  baseMint: PublicKey
   quoteVault: PublicKey
-  baseVault: PublicKey
   rent: PublicKey
   tokenProgram: PublicKey
   systemProgram: PublicKey
@@ -41,9 +39,7 @@ export function initMarket(args: InitMarketArgs, accounts: InitMarketAccounts) {
     { pubkey: accounts.bids, isSigner: false, isWritable: true },
     { pubkey: accounts.asks, isSigner: false, isWritable: true },
     { pubkey: accounts.quoteMint, isSigner: false, isWritable: false },
-    { pubkey: accounts.baseMint, isSigner: false, isWritable: false },
     { pubkey: accounts.quoteVault, isSigner: false, isWritable: true },
-    { pubkey: accounts.baseVault, isSigner: false, isWritable: true },
     { pubkey: accounts.rent, isSigner: false, isWritable: false },
     { pubkey: accounts.tokenProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },

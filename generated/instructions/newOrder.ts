@@ -20,11 +20,8 @@ export interface NewOrderAccounts {
   asks: PublicKey
   orderbook: PublicKey
   quoteMint: PublicKey
-  baseMint: PublicKey
   userQuote: PublicKey
-  userBase: PublicKey
   quoteVault: PublicKey
-  baseVault: PublicKey
   tokenProgram: PublicKey
 }
 
@@ -45,11 +42,8 @@ export function newOrder(args: NewOrderArgs, accounts: NewOrderAccounts) {
     { pubkey: accounts.asks, isSigner: false, isWritable: true },
     { pubkey: accounts.orderbook, isSigner: false, isWritable: true },
     { pubkey: accounts.quoteMint, isSigner: false, isWritable: false },
-    { pubkey: accounts.baseMint, isSigner: false, isWritable: false },
     { pubkey: accounts.userQuote, isSigner: false, isWritable: true },
-    { pubkey: accounts.userBase, isSigner: false, isWritable: true },
     { pubkey: accounts.quoteVault, isSigner: false, isWritable: true },
-    { pubkey: accounts.baseVault, isSigner: false, isWritable: true },
     { pubkey: accounts.tokenProgram, isSigner: false, isWritable: false },
   ]
   const identifier = Buffer.from([153, 0, 116, 34, 241, 46, 40, 139])
