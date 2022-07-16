@@ -84,32 +84,37 @@ pub struct NewOrder<'info> {
     pub token_program: Program<'info, Token>,
 }
 
-pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64, is_broker: bool) -> Result<()> {
+impl<'info> NewOrder<'info> {
     
+    pub fn transfer_user_quote(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
+        let program = self.token_program.to_account_info();
+        let accounts = token::Transfer {
+            from: self.user_quote.to_account_info(),
+            to: self.quote_vault.to_account_info(),
+            authority: self.user.to_account_info(),
+        };
+        CpiContext::new(program, accounts)
+    }
+
+    pub fn transfer_quote_vault(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
+        let program = self.token_program.to_account_info();
+        let accounts = token::Transfer {
+            from: self.quote_vault.to_account_info(),
+            to: self.user_quote.to_account_info(),
+            authority: self.market.to_account_info(),
+        };
+        CpiContext::new(program, accounts)
+    }
+}
+
+pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64, is_broker: bool) -> Result<()> {
     
     let user; 
 
     let post_only;
     let post_allowed;
 
-    /*
-
-    match side {
-        Side::Ask => {
-            if qty > user_account.base_free {
-                return Err(ProgramError::InvalidInstructionData);
-            }
-        }
-        Side::Bid => {
-            let max_borrow_qty =
-                get_max_borrow_qty(&user_account, &market, &ctx.accounts.price_oracle);
-            msg!("Max borrow amount is {}", max_borrow_qty);
-            if qty > max_borrow_qty {
-                return Err(ProgramError::InsufficientFunds);
-            }
-        }
-    };
-    */
+    // Check the order size
 
     // Broker should be only a maker and other users should be always a taker
     if is_broker {
@@ -134,10 +139,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         self_trade_behavior: SelfTradeBehavior::AbortTransaction,
     };
 
-    
-
-   
-    if let Err(error) =
+    let mut order_summary = match 
         agnostic_orderbook::instruction::new_order::process(ctx.program_id, agnostic_orderbook::instruction::new_order::Accounts {
             market: &ctx.accounts.orderbook,
             asks: &ctx.accounts.asks,
@@ -145,24 +147,57 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
             event_queue: &ctx.accounts.event_queue,
         }, invoke_params,
     ) {
-        
-        let error_display = error.print::<AoError>();
-        msg!("Error: {:?}", error_display) ;
-        return Err(error!(CustomErrors::InvalidOrder))
+        Err(error) => {
+            let error_display = error.print::<AoError>();
+            msg!("Error: {:?}", error_display) ;
+            return Err(error!(CustomErrors::InvalidOrder))
+        }
+        Ok(s) => s,        
+    };
+
+    // CHECK THE ORDER SUMMARY CANCEL IF THE ORDER IS NOT FILL ENTIRELY
+     
+    
+    // UPDATE USER_ACCOUNT AND SEND SPL TOKEN
+    
+    /*
+
+    match open_orders.side {
+        Side::Ask => {
+            msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
+            msg!("order summary {:?}", order_summary);
+            open_orders.base_token_locked = open_orders
+                .base_token_locked
+                .checked_add(order_summary.total_base_qty)
+                .unwrap();
+            token::transfer(
+                ctx.accounts.transfer_user_base(),
+                order_summary.total_base_qty,
+            )?;
+        }
+        Side::Bid => {
+            msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
+            msg!("order summary {:?}", order_summary);
+            open_orders.quote_token_locked = open_orders
+                .quote_token_locked
+                .checked_add(order_summary.total_quote_qty)
+                .unwrap();
+            token::transfer(
+                ctx.accounts.transfer_user_quote(),
+                order_summary.total_quote_qty,
+            )?;
+        }
     }
 
+    */
+
+
     // Display the first event of the list
-
     let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
-
     let event_queue =
         EventQueue::<[u8; 32]>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
-
     let event =    event_queue.iter().next();
-    
     msg!("EVENT {:?}", event);
-
-    // Verify how much tokens we should wire in the pending trading zone
 
     Ok(())
 }
