@@ -14,7 +14,6 @@ export interface User {
   userKeypair?: Keypair,
   user: PublicKey,
   userAccount: PublicKey,
-  userBase: PublicKey,
   userQuote: PublicKey,
   side: genTypes.SideKind,
 }
@@ -23,28 +22,13 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
   let userKeypair = new anchor.web3.Keypair();
   let user = userKeypair.publicKey;
   await provider.connection.requestAirdrop(user, 1_000_000_00)
-  let userBase = await createAssociatedTokenAccount(
-    provider.connection,
-    wallet.payer,
-    market.baseMint,
-    user
-  );
+
   let userQuote = await createAssociatedTokenAccount(
     provider.connection,
     wallet.payer,
     market.quoteMint,
     user
   );
-  if (numBaseTokens.gt(new BN(0))) {
-    await mintTo(
-      provider.connection,
-      wallet.payer,
-      market.baseMint,
-      userBase,
-      wallet.publicKey,
-      numBaseTokens.toNumber(),
-    );
-  }
   if (numQuoteTokens.gt(new BN(0))) {
     await mintTo(
       provider.connection,
@@ -63,7 +47,6 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
     userKeypair,
     user,
     userAccount,
-    userBase,
     userQuote,
     side,
   }
