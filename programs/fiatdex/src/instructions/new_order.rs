@@ -132,7 +132,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         max_quote_qty: u64::MAX,
         limit_price: limit_price,
         side: AobSide::from(side),
-        match_limit: 2,
+        match_limit: 1,
         callback_info: user,
         post_only: post_only,
         post_allowed: post_allowed,
@@ -159,11 +159,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
      if is_broker { // is a post only
         abort = order_summary.posted_order_id.is_none();
     } else {   // is a FillOrKill
-        if side == Side::Bid {
-            abort = false // (order_summary.total_quote_qty < max_quote_qty); FIX ME compute max_quote_qty
-        } else {
-            abort = (order_summary.total_base_qty < max_base_qty);
-        }
+        abort = !order_summary.posted_order_id.is_none();
     }
 
     if abort {
@@ -176,10 +172,13 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
 
     let user_account = &mut *ctx.accounts.user_account;
 
-    user_account
-        .orders
-        .push(order_summary.posted_order_id.unwrap());
-    user_account.number_of_orders += 1;
+    if let Some(order_id) = order_summary.posted_order_id {
+        
+        user_account
+            .orders
+            .push(order_summary.posted_order_id.unwrap());
+        user_account.number_of_orders += 1;
+    }
 
     match side {
         Side::Bid => {
@@ -208,44 +207,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
             
         }
     }
-
-    // CHECK THE ORDER SUMMARY CANCEL IF THE ORDER IS NOT FILL ENTIRELY
-     
     
-    // UPDATE USER_ACCOUNT AND SEND SPL TOKEN
-    
-    /*
-
-    match open_orders.side {
-        Side::Ask => {
-            msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
-            msg!("order summary {:?}", order_summary);
-            open_orders.base_token_locked = open_orders
-                .base_token_locked
-                .checked_add(order_summary.total_base_qty)
-                .unwrap();
-            token::transfer(
-                ctx.accounts.transfer_user_base(),
-                order_summary.total_base_qty,
-            )?;
-        }
-        Side::Bid => {
-            msg!("max base qty: {}, limit price in FP32: {}", max_base_qty, limit_price);
-            msg!("order summary {:?}", order_summary);
-            open_orders.quote_token_locked = open_orders
-                .quote_token_locked
-                .checked_add(order_summary.total_quote_qty)
-                .unwrap();
-            token::transfer(
-                ctx.accounts.transfer_user_quote(),
-                order_summary.total_quote_qty,
-            )?;
-        }
-    }
-
-    */
-
-
     // Display the first event of the list
     let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
     let event_queue =
