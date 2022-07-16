@@ -140,7 +140,7 @@ describe("fiatdex", () => {
     console.log("Ca tourne");
   });
 
-  it("inits open order of Bob and Alice", async () => {
+  it("inits open orders of Bob and Alice", async () => {
 
 
     let thisBidUser = await initUser(
@@ -169,46 +169,46 @@ describe("fiatdex", () => {
 
     tx.add(
       genInstr.initOpenOrders(
-        { ...thisAskUser },
-        { ...thisAskUser, ...auction }
+        { ...users[0], ...market }
       )
     );
     tx.add(
       genInstr.initOpenOrders(
-        { ...thisBidUser },
-        { ...thisBidUser, ...auction }
+        { ...users[1], ...market }
       )
     );
-    await provider.send(
+    await provider.sendAndConfirm(
       tx,
       [thisAskUser.userKeypair, thisBidUser.userKeypair],
       { skipPreflight: true }
     );
 
-    /*
-    
-
     let askOpenOrders = await genAccs.OpenOrders.fetch(
       provider.connection,
-      thisAskUser.openOrders
+      users[1].openOrders
     );
     let bidOpenOrders = await genAccs.OpenOrders.fetch(
       provider.connection,
-      thisBidUser.openOrders
+      users[0].openOrders
     );
+
     assert.isTrue(
-      askOpenOrders.authority.toString() == thisAskUser.user.toString(),
+      bidOpenOrders.authority.toString() == users[0].user.toString(),
       "check ask open orders init correctly"
     );
-    */
+
+    assert.isTrue(
+      askOpenOrders.authority.toString() == users[1].user.toString(),
+      "check ask open orders init correctly"
+    );
+
+
 
   });
   it("creates a new bid order", async () => {
 
 
     let tx1 = new anchor.web3.Transaction();
-
-    //console.log("Display Test---->", { ...thisAskUser, ...market });
 
     tx1.add(
       genInstr.newOrder(
