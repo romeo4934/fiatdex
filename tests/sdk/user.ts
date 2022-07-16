@@ -13,7 +13,7 @@ import { SSL_OP_NETSCAPE_CA_DN_BUG } from "constants";
 export interface User {
   userKeypair?: Keypair,
   user: PublicKey,
-  openOrders: PublicKey,
+  userAccount: PublicKey,
   userBase: PublicKey,
   userQuote: PublicKey,
   side: genTypes.SideKind,
@@ -55,14 +55,14 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
       numQuoteTokens.toNumber(),
     );
   }
-  let [openOrders] = await anchor.web3.PublicKey.findProgramAddress(
+  let [userAccount] = await anchor.web3.PublicKey.findProgramAddress(
     [user.toBuffer(), Buffer.from("user_account"), Buffer.from(market.marketId), wallet.publicKey.toBuffer()],
     program.programId
   );
   return {
     userKeypair,
     user,
-    openOrders,
+    userAccount,
     userBase,
     userQuote,
     side,

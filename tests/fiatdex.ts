@@ -183,13 +183,13 @@ describe("fiatdex", () => {
       { skipPreflight: true }
     );
 
-    let askOpenOrders = await genAccs.OpenOrders.fetch(
+    let askOpenOrders = await genAccs.UserAccount.fetch(
       provider.connection,
-      users[1].openOrders
+      users[1].userAccount
     );
-    let bidOpenOrders = await genAccs.OpenOrders.fetch(
+    let bidOpenOrders = await genAccs.UserAccount.fetch(
       provider.connection,
-      users[0].openOrders
+      users[0].userAccount
     );
 
     assert.isTrue(
@@ -257,8 +257,8 @@ describe("fiatdex", () => {
 
     // This is how we add remaining accounts to the transaction instruction
     thisInstr.keys = thisInstr.keys.concat([
-      { pubkey: users[0].openOrders, isSigner: false, isWritable: true },
-      { pubkey: users[1].openOrders, isSigner: false, isWritable: true },
+      { pubkey: users[0].userAccount, isSigner: false, isWritable: true },
+      { pubkey: users[1].userAccount, isSigner: false, isWritable: true },
     ]);
     tx3.add(thisInstr);
     await provider.sendAndConfirm(tx3, [], { skipPreflight: true });
