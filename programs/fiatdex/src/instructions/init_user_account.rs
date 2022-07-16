@@ -45,6 +45,7 @@ pub fn init_user_account(ctx: Context<InitUserAccount>) -> Result<()> {
         
         quote_token_locked: 0,
         quote_token_free: 0,
+        quote_token_as_caution_fee: 0,
         
         number_of_orders: 0,
         orders: Vec::new(),

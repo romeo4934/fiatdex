@@ -10,6 +10,7 @@ export interface UserAccountFields {
   market: PublicKey
   quoteTokenFree: BN
   quoteTokenLocked: BN
+  quoteTokenAsCautionFee: BN
   numberOfOrders: number
   orders: Array<BN>
 }
@@ -20,6 +21,7 @@ export interface UserAccountJSON {
   market: string
   quoteTokenFree: string
   quoteTokenLocked: string
+  quoteTokenAsCautionFee: string
   numberOfOrders: number
   orders: Array<string>
 }
@@ -30,6 +32,7 @@ export class UserAccount {
   readonly market: PublicKey
   readonly quoteTokenFree: BN
   readonly quoteTokenLocked: BN
+  readonly quoteTokenAsCautionFee: BN
   readonly numberOfOrders: number
   readonly orders: Array<BN>
 
@@ -43,6 +46,7 @@ export class UserAccount {
     borsh.publicKey("market"),
     borsh.u64("quoteTokenFree"),
     borsh.u64("quoteTokenLocked"),
+    borsh.u64("quoteTokenAsCautionFee"),
     borsh.u8("numberOfOrders"),
     borsh.vec(borsh.u128(), "orders"),
   ])
@@ -53,6 +57,7 @@ export class UserAccount {
     this.market = fields.market
     this.quoteTokenFree = fields.quoteTokenFree
     this.quoteTokenLocked = fields.quoteTokenLocked
+    this.quoteTokenAsCautionFee = fields.quoteTokenAsCautionFee
     this.numberOfOrders = fields.numberOfOrders
     this.orders = fields.orders
   }
@@ -104,6 +109,7 @@ export class UserAccount {
       market: dec.market,
       quoteTokenFree: dec.quoteTokenFree,
       quoteTokenLocked: dec.quoteTokenLocked,
+      quoteTokenAsCautionFee: dec.quoteTokenAsCautionFee,
       numberOfOrders: dec.numberOfOrders,
       orders: dec.orders,
     })
@@ -116,6 +122,7 @@ export class UserAccount {
       market: this.market.toString(),
       quoteTokenFree: this.quoteTokenFree.toString(),
       quoteTokenLocked: this.quoteTokenLocked.toString(),
+      quoteTokenAsCautionFee: this.quoteTokenAsCautionFee.toString(),
       numberOfOrders: this.numberOfOrders,
       orders: this.orders.map((item) => item.toString()),
     }
@@ -128,6 +135,7 @@ export class UserAccount {
       market: new PublicKey(obj.market),
       quoteTokenFree: new BN(obj.quoteTokenFree),
       quoteTokenLocked: new BN(obj.quoteTokenLocked),
+      quoteTokenAsCautionFee: new BN(obj.quoteTokenAsCautionFee),
       numberOfOrders: obj.numberOfOrders,
       orders: obj.orders.map((item) => new BN(item)),
     })
