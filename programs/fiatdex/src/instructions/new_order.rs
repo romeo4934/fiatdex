@@ -155,6 +155,60 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         Ok(s) => s,        
     };
 
+    let abort;
+     if is_broker { // is a post only
+        abort = order_summary.posted_order_id.is_none();
+    } else {   // is a FillOrKill
+        if side == Side::Bid {
+            abort = false // (order_summary.total_quote_qty < max_quote_qty); FIX ME compute max_quote_qty
+        } else {
+            abort = (order_summary.total_base_qty < max_base_qty);
+        }
+    }
+
+    if abort {
+        msg!(
+            "The order from the broker {:?} has caused an abort",
+            is_broker
+        );
+        return Err(error!(CustomErrors::AbortedOrder));
+    }
+
+    let user_account = &mut *ctx.accounts.user_account;
+
+    user_account
+        .orders
+        .push(order_summary.posted_order_id.unwrap());
+    user_account.number_of_orders += 1;
+
+    match side {
+        Side::Bid => {
+            msg!("Bid");
+            user_account.quote_token_locked = user_account
+                .quote_token_locked
+                .checked_add(order_summary.total_quote_qty)
+                .unwrap();
+
+            token::transfer(
+                ctx.accounts.transfer_user_quote(),
+                order_summary.total_quote_qty,
+            )?;
+        }
+        Side::Ask => {
+            msg!("Ask");
+            user_account.quote_token_as_caution_fee = user_account
+                .quote_token_as_caution_fee
+                .checked_add(order_summary.total_base_qty)
+                .unwrap();
+
+            token::transfer(
+                ctx.accounts.transfer_user_quote(),
+                order_summary.total_base_qty,
+            )?;
+            
+        }
+    }
+
     // CHECK THE ORDER SUMMARY CANCEL IF THE ORDER IS NOT FILL ENTIRELY
      
     
