@@ -2,7 +2,7 @@
 
 Remaining
 - fix callbacks with open orders
-- deposit, widtdraw
+- deposit, widthdraw
 - finalise the logic of the dex
 - connect to the smart contract of Kirill
 
