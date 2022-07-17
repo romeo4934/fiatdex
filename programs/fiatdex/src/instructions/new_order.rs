@@ -109,7 +109,7 @@ impl<'info> NewOrder<'info> {
 
 pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_qty: u64, is_broker: bool) -> Result<()> {
     
-    let user; 
+    
 
     let post_only;
     let post_allowed;
@@ -118,14 +118,18 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
 
     // Broker should be only a maker and other users should be always a taker
     if is_broker {
-        user = [1; 32];
+        
         (post_only, post_allowed)=(true, true);
     } else {
-        user = [2; 32];
+        
         (post_only, post_allowed)=(false, false);
     }
 
     msg!("is Broker?: {:?}, Side: {:?}, max base qty: {:?}, limit price in FP32: {:?}",is_broker,  side, max_base_qty, limit_price);
+
+    let callback_info = BasicCallBack {
+        user_account: ctx.accounts.user_account.key(),
+    };
 
     let invoke_params = agnostic_orderbook::instruction::new_order::Params {
         max_base_qty: max_base_qty,
@@ -133,7 +137,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
         limit_price: limit_price,
         side: AobSide::from(side),
         match_limit: 1,
-        callback_info: user,
+        callback_info: callback_info,
         post_only: post_only,
         post_allowed: post_allowed,
         self_trade_behavior: SelfTradeBehavior::AbortTransaction,

@@ -91,7 +91,7 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         tick_size: tick_size,
     };
     
-    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<[u8; 32]>(
+    if let Err(error) = agnostic_orderbook::instruction::create_market::process::<BasicCallBack>(
         ctx.program_id,
         agnostic_orderbook::instruction::create_market::Accounts {
             market: &ctx.accounts.orderbook,
