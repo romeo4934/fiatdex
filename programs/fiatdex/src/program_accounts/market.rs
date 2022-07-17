@@ -10,7 +10,7 @@ pub struct Market {
     pub bumps: AobBumps,
     pub authority: Pubkey,
     pub market_id: [u8; 10],
-    pub pct_quote_locked: u16,  //percentage of amount of base currency that needs to be locked in quote currency to create an order
+    pub pct_caution_fee_for_base_token: u16,  //percentage of amount of base currency that needs to be locked in quote currency to create an order
     pub orderbook: Pubkey,
     pub event_queue: Pubkey,
     pub bids: Pubkey,

@@ -9,7 +9,7 @@ export interface MarketFields {
   bumps: types.AobBumpsFields
   authority: PublicKey
   marketId: Array<number>
-  pctQuoteLocked: number
+  pctCautionFeeForBaseToken: number
   orderbook: PublicKey
   eventQueue: PublicKey
   bids: PublicKey
@@ -25,7 +25,7 @@ export interface MarketJSON {
   bumps: types.AobBumpsJSON
   authority: string
   marketId: Array<number>
-  pctQuoteLocked: number
+  pctCautionFeeForBaseToken: number
   orderbook: string
   eventQueue: string
   bids: string
@@ -41,7 +41,7 @@ export class Market {
   readonly bumps: types.AobBumps
   readonly authority: PublicKey
   readonly marketId: Array<number>
-  readonly pctQuoteLocked: number
+  readonly pctCautionFeeForBaseToken: number
   readonly orderbook: PublicKey
   readonly eventQueue: PublicKey
   readonly bids: PublicKey
@@ -60,7 +60,7 @@ export class Market {
     types.AobBumps.layout("bumps"),
     borsh.publicKey("authority"),
     borsh.array(borsh.u8(), 10, "marketId"),
-    borsh.u16("pctQuoteLocked"),
+    borsh.u16("pctCautionFeeForBaseToken"),
     borsh.publicKey("orderbook"),
     borsh.publicKey("eventQueue"),
     borsh.publicKey("bids"),
@@ -76,7 +76,7 @@ export class Market {
     this.bumps = new types.AobBumps({ ...fields.bumps })
     this.authority = fields.authority
     this.marketId = fields.marketId
-    this.pctQuoteLocked = fields.pctQuoteLocked
+    this.pctCautionFeeForBaseToken = fields.pctCautionFeeForBaseToken
     this.orderbook = fields.orderbook
     this.eventQueue = fields.eventQueue
     this.bids = fields.bids
@@ -133,7 +133,7 @@ export class Market {
       bumps: types.AobBumps.fromDecoded(dec.bumps),
       authority: dec.authority,
       marketId: dec.marketId,
-      pctQuoteLocked: dec.pctQuoteLocked,
+      pctCautionFeeForBaseToken: dec.pctCautionFeeForBaseToken,
       orderbook: dec.orderbook,
       eventQueue: dec.eventQueue,
       bids: dec.bids,
@@ -151,7 +151,7 @@ export class Market {
       bumps: this.bumps.toJSON(),
       authority: this.authority.toString(),
       marketId: this.marketId,
-      pctQuoteLocked: this.pctQuoteLocked,
+      pctCautionFeeForBaseToken: this.pctCautionFeeForBaseToken,
       orderbook: this.orderbook.toString(),
       eventQueue: this.eventQueue.toString(),
       bids: this.bids.toString(),
@@ -169,7 +169,7 @@ export class Market {
       bumps: types.AobBumps.fromJSON(obj.bumps),
       authority: new PublicKey(obj.authority),
       marketId: obj.marketId,
-      pctQuoteLocked: obj.pctQuoteLocked,
+      pctCautionFeeForBaseToken: obj.pctCautionFeeForBaseToken,
       orderbook: new PublicKey(obj.orderbook),
       eventQueue: new PublicKey(obj.eventQueue),
       bids: new PublicKey(obj.bids),

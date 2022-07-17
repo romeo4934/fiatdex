@@ -148,9 +148,7 @@ describe("fiatdex", () => {
       provider,
       wallet,
       market,
-      new genTypes.Side.Bid(),
-      new anchor.BN(1_000_000),
-      new anchor.BN(0),
+      new anchor.BN(20_100_000),
     );
 
     let thisAskUser = await initUser(
@@ -158,12 +156,10 @@ describe("fiatdex", () => {
       provider,
       wallet,
       market,
-      new genTypes.Side.Ask(),
-      new anchor.BN(1_000),
-      new anchor.BN(0),
+      new anchor.BN(2_000),
     );
 
-    users.push(thisAskUser, thisBidUser);
+    users.push(thisBidUser, thisAskUser);
 
     let tx = new anchor.web3.Transaction();
 

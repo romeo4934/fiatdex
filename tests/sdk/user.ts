@@ -15,10 +15,9 @@ export interface User {
   user: PublicKey,
   userAccount: PublicKey,
   userQuote: PublicKey,
-  side: genTypes.SideKind,
 }
 
-export async function initUser(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, market: Market, side: genTypes.SideKind, numBaseTokens: BN, numQuoteTokens: BN): Promise<User> {
+export async function initUser(program: anchor.Program<Fiatdex>, provider: anchor.Provider, wallet: anchor.Wallet, market: Market, numQuoteTokens: BN): Promise<User> {
   let userKeypair = new anchor.web3.Keypair();
   let user = userKeypair.publicKey;
   await provider.connection.requestAirdrop(user, 1_000_000_00)
@@ -48,6 +47,5 @@ export async function initUser(program: anchor.Program<Fiatdex>, provider: ancho
     user,
     userAccount,
     userQuote,
-    side,
   }
 }

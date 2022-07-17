@@ -75,7 +75,7 @@ pub fn init_market(ctx: Context<InitMarket>, market_id: [u8; 10], min_base_order
         authority: ctx.accounts.marketer.key(),
         market_id: market_id,
         // Order book stuff
-        pct_quote_locked: 500, // "5%"
+        pct_caution_fee_for_base_token: 500, // "5%"
         event_queue: ctx.accounts.event_queue.key(),
         orderbook: ctx.accounts.orderbook.key(),
         bids: ctx.accounts.bids.key(),

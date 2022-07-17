@@ -187,12 +187,10 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
                 .quote_token_locked
                 .checked_add(order_summary.total_quote_qty)
                 .unwrap();
-            /*
             token::transfer(
                 ctx.accounts.transfer_user_quote(),
                 order_summary.total_quote_qty,
             )?;
-            */
         }
         Side::Ask => {
             msg!("Ask");
@@ -200,12 +198,10 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
                 .quote_token_as_caution_fee
                 .checked_add(order_summary.total_base_qty)
                 .unwrap();
-            /*
             token::transfer(
                 ctx.accounts.transfer_user_quote(),
                 order_summary.total_base_qty,
             )?;
-            */
             
         }
     }
