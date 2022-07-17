@@ -181,26 +181,33 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
     }
 
     match side {
-        Side::Bid => {
-            msg!("Bid");
+        Side::Bid => { // Buy Fiat for Crypto
+            msg!("Bid"); 
             user_account.quote_token_locked = user_account
                 .quote_token_locked
                 .checked_add(order_summary.total_quote_qty)
                 .unwrap();
+            user_account.quote_token_as_caution_fee = user_account
+                .quote_token_as_caution_fee
+                .checked_add(order_summary.total_base_qty)
+                .unwrap();
+            let total_transfered = order_summary.total_quote_qty.checked_add(order_summary.total_base_qty).unwrap();
+            msg!("Total Transfered: {:?}", total_transfered);
             token::transfer(
                 ctx.accounts.transfer_user_quote(),
-                order_summary.total_quote_qty,
+                total_transfered,
             )?;
         }
-        Side::Ask => {
+        Side::Ask => { // Sell Fiat for Crypto
             msg!("Ask");
             user_account.quote_token_as_caution_fee = user_account
                 .quote_token_as_caution_fee
                 .checked_add(order_summary.total_base_qty)
                 .unwrap();
-            token::transfer(
+                msg!("Total Transfered: {:?}", order_summary.total_base_qty) ;
+                token::transfer(
                 ctx.accounts.transfer_user_quote(),
-                order_summary.total_base_qty,
+                order_summary.total_base_qty, // quote_base
             )?;
             
         }
