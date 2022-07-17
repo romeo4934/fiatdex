@@ -157,7 +157,7 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
 
     let abort;
      if is_broker { // is a post only
-        abort = order_summary.posted_order_id.is_none();
+        abort = order_summary.posted_order_id.is_none() | (order_summary.total_base_qty_posted != max_base_qty ) ;
     } else {   // is a FillOrKill
         abort = !order_summary.posted_order_id.is_none() | (order_summary.total_base_qty < max_base_qty) ; 
     }
