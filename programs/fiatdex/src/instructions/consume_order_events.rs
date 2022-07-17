@@ -75,7 +75,7 @@ fn consume_event(
             maker_callback_info,
             taker_callback_info,
         }) => {
-            msg!("FILL!!");
+            msg!("FILL!!: {:?}, {:?}, {:?}", event, maker_callback_info, taker_callback_info);
         }
         EventRef::Out(OutEventRef {
             event,

@@ -212,13 +212,6 @@ pub fn new_order(ctx: Context<NewOrder>, side: Side, limit_price: u64, max_base_
             
         }
     }
-    
-    // Display the first event of the list
-    let mut event_queue_guard = ctx.accounts.event_queue.data.borrow_mut();
-    let event_queue =
-        EventQueue::<[u8; 32]>::from_buffer(&mut event_queue_guard, AccountTag::EventQueue)?;
-    let event =    event_queue.iter().next();
-    msg!("EVENT {:?}", event);
 
     Ok(())
 }
