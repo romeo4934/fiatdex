@@ -255,7 +255,7 @@ describe("fiatdex", () => {
       users[1].userAccount
     );
     assert.isTrue(
-      thisUserAccount.numberOfOrders == 1,
+      thisUserAccount.numberOfOrders == 0,
       "check ask orders has been placed"
     );
 

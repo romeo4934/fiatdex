@@ -82,10 +82,10 @@ fn consume_event(
         }) => {
             msg!("FILL!!: {:?}, {:?}, {:?}", event, maker_callback_info, taker_callback_info);
             
-            let user_pubkey = Pubkey::new(&maker_callback_info[..]);
-            let user_account_id = user_accounts.binary_search_by_key(&user_pubkey, |acc| acc.key()).unwrap();
+            let maker_pubkey = Pubkey::new(&maker_callback_info[..]);
+            let maker_account_id = user_accounts.binary_search_by_key(&maker_pubkey, |acc| acc.key()).unwrap();
 
-            let mut user_open_orders: Account<UserAccount> = Account::try_from(&user_accounts[user_account_id])?;
+            let mut maker_account: Account<UserAccount> = Account::try_from(&user_accounts[maker_account_id])?;
 
         }
         EventRef::Out(OutEventRef {
