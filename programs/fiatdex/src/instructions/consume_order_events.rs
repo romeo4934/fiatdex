@@ -87,6 +87,11 @@ fn consume_event(
 
             let mut maker_account: Account<UserAccount> = Account::try_from(&user_accounts[maker_account_id])?;
 
+            let taker_pubkey = Pubkey::new(&taker_callback_info[..]);
+            let taker_account_id = user_accounts.binary_search_by_key(&taker_pubkey, |acc| acc.key()).unwrap();
+
+            let mut taker_account: Account<UserAccount> = Account::try_from(&user_accounts[taker_account_id])?;
+
         }
         EventRef::Out(OutEventRef {
             event,
