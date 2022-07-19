@@ -219,6 +219,16 @@ describe("fiatdex", () => {
     );
 
     await provider.sendAndConfirm(tx1, [users[0].userKeypair], { skipPreflight: true });
+
+    let thisUserAccount = await genAccs.UserAccount.fetch(
+      provider.connection,
+      users[0].userAccount
+    );
+    assert.isTrue(
+      thisUserAccount.numberOfOrders == 1,
+      "check bid orders has been placed"
+    );
+
   });
 
   it("creates a new ask order", async () => {
@@ -239,6 +249,16 @@ describe("fiatdex", () => {
     );
 
     await provider.sendAndConfirm(tx2, [users[1].userKeypair], { skipPreflight: true });
+
+    let thisUserAccount = await genAccs.UserAccount.fetch(
+      provider.connection,
+      users[1].userAccount
+    );
+    assert.isTrue(
+      thisUserAccount.numberOfOrders == 1,
+      "check ask orders has been placed"
+    );
+
   });
   it("consumes events", async () => {
 

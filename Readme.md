@@ -1,7 +1,7 @@
 # DEX FIAT CRYPTO
 
 Remaining
-- implement consume_events
+- implement consume_events: move money
 - add more tests
 - connect to the smart contract of Kirill
 - settle
