@@ -1,7 +1,7 @@
 # DEX FIAT CRYPTO
 
 Remaining
-- fix callbacks with open orders and consume_events
+- implement consume_events
 - add more tests
 - connect to the smart contract of Kirill
 - settle

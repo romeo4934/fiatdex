@@ -69,6 +69,11 @@ fn consume_event(
     accounts_slice: &[AccountInfo],
     event: EventRef<[u8; 32]>,
 ) -> Result<()> {
+
+    let mut user_accounts: Vec<&AccountInfo> = accounts_slice.iter().collect();
+
+    user_accounts.sort_unstable_by_key(|a| a.key());
+
     match event {
         EventRef::Fill(FillEventRef {
             event,
@@ -76,6 +81,12 @@ fn consume_event(
             taker_callback_info,
         }) => {
             msg!("FILL!!: {:?}, {:?}, {:?}", event, maker_callback_info, taker_callback_info);
+            
+            let user_pubkey = Pubkey::new(&maker_callback_info[..]);
+            let user_account_id = user_accounts.binary_search_by_key(&user_pubkey, |acc| acc.key()).unwrap();
+
+            let mut user_open_orders: Account<UserAccount> = Account::try_from(&user_accounts[user_account_id])?;
+
         }
         EventRef::Out(OutEventRef {
             event,

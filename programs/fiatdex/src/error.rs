@@ -12,4 +12,6 @@ pub enum CustomErrors {
     InvalidOrder, // 6003
     #[msg("Order has aborted")]
     AbortedOrder, // 6004
+    #[msg("Impossible to decode user account")]
+    MissingOpenOrdersPubkeyInRemainingAccounts, // 6005
 }
